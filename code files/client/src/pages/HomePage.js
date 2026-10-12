@@ -16,7 +16,6 @@ const HomePage = ({ selectedCity }) => {
 
   // Hero Spotlight Carousel State
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [touchStartX, setTouchStartX] = useState(null);
   const [touchEndX, setTouchEndX] = useState(null);
 
@@ -28,20 +27,20 @@ const HomePage = ({ selectedCity }) => {
 
   const hasActiveFilters = searchQuery.trim() !== '' || selectedGenre !== 'All' || selectedLanguage !== 'All';
 
-  // Get top featured movies for the hero carousel (up to 5 spotlight titles)
-  const spotlightMovies = movies.length > 0 ? movies.slice(0, 5) : (featuredMovie ? [featuredMovie] : []);
+  // Get top featured movies for the hero carousel (up to 6 spotlight titles)
+  const spotlightMovies = movies.length > 0 ? movies.slice(0, 6) : (featuredMovie ? [featuredMovie] : []);
   const activeMovie = spotlightMovies[currentSlide] || featuredMovie || movies[0];
 
-  // Auto-play timer for hero carousel (cycles every 5.5s, pauses on hover)
+  // Auto-play timer for hero carousel: smoothly cycles every 4.5 seconds
   useEffect(() => {
-    if (spotlightMovies.length <= 1 || isPaused) return;
+    if (spotlightMovies.length <= 1) return;
 
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % spotlightMovies.length);
-    }, 5500);
+    }, 4500);
 
     return () => clearInterval(timer);
-  }, [spotlightMovies.length, isPaused]);
+  }, [spotlightMovies.length, currentSlide]);
 
   const nextSlide = () => {
     if (spotlightMovies.length <= 1) return;
@@ -126,8 +125,6 @@ const HomePage = ({ selectedCity }) => {
       {/* Cinematic Hero Spotlight Banner Carousel */}
       {activeMovie && (
         <div
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
