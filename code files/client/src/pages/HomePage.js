@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import MovieCard from '../components/MovieCard';
-import { Search, Play, Sparkles, Filter, AlertCircle, RotateCcw, X, Star, Clock, Ticket } from 'lucide-react';
+import { Search, Play, Sparkles, Filter, AlertCircle, RotateCcw, X, Star, Clock, Ticket, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HomePage = ({ selectedCity }) => {
   const [movies, setMovies] = useState([]);
@@ -14,6 +14,12 @@ const HomePage = ({ selectedCity }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
+  // Hero Spotlight Carousel State
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [touchStartX, setTouchStartX] = useState(null);
+  const [touchEndX, setTouchEndX] = useState(null);
+
   const handleClearFilters = () => {
     setSearchQuery('');
     setSelectedGenre('All');
@@ -21,6 +27,52 @@ const HomePage = ({ selectedCity }) => {
   };
 
   const hasActiveFilters = searchQuery.trim() !== '' || selectedGenre !== 'All' || selectedLanguage !== 'All';
+
+  // Get top featured movies for the hero carousel (up to 5 spotlight titles)
+  const spotlightMovies = movies.length > 0 ? movies.slice(0, 5) : (featuredMovie ? [featuredMovie] : []);
+  const activeMovie = spotlightMovies[currentSlide] || featuredMovie || movies[0];
+
+  // Auto-play timer for hero carousel (cycles every 5.5s, pauses on hover)
+  useEffect(() => {
+    if (spotlightMovies.length <= 1 || isPaused) return;
+
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % spotlightMovies.length);
+    }, 5500);
+
+    return () => clearInterval(timer);
+  }, [spotlightMovies.length, isPaused]);
+
+  const nextSlide = () => {
+    if (spotlightMovies.length <= 1) return;
+    setCurrentSlide((prev) => (prev + 1) % spotlightMovies.length);
+  };
+
+  const prevSlide = () => {
+    if (spotlightMovies.length <= 1) return;
+    setCurrentSlide((prev) => (prev - 1 + spotlightMovies.length) % spotlightMovies.length);
+  };
+
+  // Swipable touch handlers
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX === null || touchEndX === null) return;
+    const distance = touchStartX - touchEndX;
+    if (distance > 50) {
+      nextSlide();
+    } else if (distance < -50) {
+      prevSlide();
+    }
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
 
   // Fetch filter metadata (unique genres and languages)
   useEffect(() => {
@@ -71,21 +123,50 @@ const HomePage = ({ selectedCity }) => {
 
   return (
     <div>
-      {/* Cinematic Hero Spotlight Banner */}
-      {featuredMovie && (
+      {/* Cinematic Hero Spotlight Banner Carousel */}
+      {activeMovie && (
         <div
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
           style={{
             position: 'relative',
             minHeight: '520px',
             display: 'flex',
             alignItems: 'center',
-            backgroundImage: `linear-gradient(90deg, rgba(11, 15, 25, 0.96) 0%, rgba(11, 15, 25, 0.85) 38%, rgba(11, 15, 25, 0.25) 75%, rgba(11, 15, 25, 0.65) 100%), linear-gradient(0deg, #0b0f19 0%, transparent 40%), url(${featuredMovie.banner || featuredMovie.poster})`,
+            backgroundImage: `linear-gradient(90deg, rgba(11, 15, 25, 0.96) 0%, rgba(11, 15, 25, 0.85) 38%, rgba(11, 15, 25, 0.25) 75%, rgba(11, 15, 25, 0.65) 100%), linear-gradient(0deg, #0b0f19 0%, transparent 40%), url(${activeMovie.banner || activeMovie.poster})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center top',
             borderBottom: '1px solid var(--border-subtle)',
-            padding: '3.5rem 0 4rem 0'
+            padding: '3.5rem 0 4rem 0',
+            transition: 'background-image 0.6s ease-in-out',
+            overflow: 'hidden'
           }}
         >
+          {/* Previous / Next Arrow Controls */}
+          {spotlightMovies.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={prevSlide}
+                className="hero-nav-btn prev"
+                aria-label="Previous movie"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <button
+                type="button"
+                onClick={nextSlide}
+                className="hero-nav-btn next"
+                aria-label="Next movie"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </>
+          )}
+
           <div className="container" style={{ width: '100%', position: 'relative', zIndex: 2 }}>
             <div style={{ maxWidth: '660px' }}>
               <div
@@ -104,48 +185,48 @@ const HomePage = ({ selectedCity }) => {
                   boxShadow: '0 0 16px rgba(240, 20, 47, 0.2)'
                 }}
               >
-                <Sparkles size={14} /> SPOTLIGHT CINEMA
+                <Sparkles size={14} /> SPOTLIGHT CINEMA {spotlightMovies.length > 1 ? `• ${currentSlide + 1}/${spotlightMovies.length}` : ''}
               </div>
 
               <h1 style={{ fontSize: '3rem', fontWeight: 900, lineHeight: 1.1, marginBottom: '0.9rem', color: '#f8fafc', letterSpacing: '-0.5px' }}>
-                {featuredMovie.title}
+                {activeMovie.title}
               </h1>
 
               {/* Rich Movie Meta Badges */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(251, 191, 36, 0.15)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.35)', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 700 }}>
                   <Star size={13} fill="#fbbf24" color="#fbbf24" />
-                  <span>{featuredMovie.rating ? featuredMovie.rating.toFixed(1) : '8.5'}</span>
+                  <span>{activeMovie.rating ? activeMovie.rating.toFixed(1) : '8.5'}</span>
                 </div>
                 <div style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#f8fafc', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700 }}>
-                  {featuredMovie.certificate || 'U/A'}
+                  {activeMovie.certificate || 'U/A'}
                 </div>
-                {featuredMovie.duration && (
+                {activeMovie.duration && (
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#cbd5e1', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 600 }}>
                     <Clock size={13} />
-                    <span>{featuredMovie.duration} mins</span>
+                    <span>{activeMovie.duration} mins</span>
                   </div>
                 )}
-                {featuredMovie.genre && featuredMovie.genre.length > 0 && (
+                {activeMovie.genre && activeMovie.genre.length > 0 && (
                   <div style={{ color: '#94a3b8', fontSize: '0.82rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                     <span>•</span>
-                    <span>{featuredMovie.genre.slice(0, 3).join(' • ')}</span>
+                    <span>{activeMovie.genre.slice(0, 3).join(' • ')}</span>
                   </div>
                 )}
               </div>
 
               <p style={{ color: '#cbd5e1', fontSize: '0.96rem', lineHeight: 1.6, marginBottom: '1.6rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                {featuredMovie.description}
+                {activeMovie.description}
               </p>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                <Link to={`/movie/${featuredMovie._id}`} className="btn-primary" style={{ padding: '0.85rem 1.85rem', fontSize: '0.95rem' }}>
+                <Link to={`/movie/${activeMovie._id}`} className="btn-primary" style={{ padding: '0.85rem 1.85rem', fontSize: '0.95rem' }}>
                   <Ticket size={17} />
                   Book Tickets Now
                 </Link>
-                {featuredMovie.trailerUrl && (
+                {activeMovie.trailerUrl && (
                   <a
-                    href={featuredMovie.trailerUrl}
+                    href={activeMovie.trailerUrl}
                     target="_blank"
                     rel="noreferrer"
                     className="btn-secondary"
@@ -158,6 +239,22 @@ const HomePage = ({ selectedCity }) => {
               </div>
             </div>
           </div>
+
+          {/* Dots Indicator for Carousel */}
+          {spotlightMovies.length > 1 && (
+            <div className="hero-dots-container">
+              {spotlightMovies.map((m, idx) => (
+                <button
+                  key={m._id || idx}
+                  type="button"
+                  onClick={() => setCurrentSlide(idx)}
+                  className={`hero-dot ${idx === currentSlide ? 'active' : 'inactive'}`}
+                  aria-label={`Go to slide ${idx + 1}: ${m.title}`}
+                />
+              ))}
+            </div>
+          )}
+
           {/* Subtle bottom gradient fade to body */}
           <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '80px', background: 'linear-gradient(to top, var(--bg-main) 0%, transparent 100%)', pointerEvents: 'none' }} />
         </div>
