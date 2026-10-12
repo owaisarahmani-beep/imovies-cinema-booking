@@ -49,7 +49,8 @@ const SeatBookingPage = () => {
     fetchShowAndSeats();
 
     // Initialize Socket.IO connection for live updates
-    const socket = io(process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000');
+    const socketUrl = process.env.REACT_APP_SOCKET_URL || (process.env.NODE_ENV === 'production' ? window.location.origin : 'http://localhost:5000');
+    const socket = io(socketUrl);
     socketRef.current = socket;
 
     socket.emit('join_show', showId);

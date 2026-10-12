@@ -1,4 +1,5 @@
 const http = require('http');
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -74,6 +75,15 @@ app.use('/api/theatres', theatreRoutes);
 app.use('/api/shows', showRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/notifications', notificationRoutes);
+
+// Serve Frontend in Production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+  });
+}
 
 // Centralized Error Handling Middleware
 app.use(errorHandler);
