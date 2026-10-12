@@ -24,24 +24,26 @@ const MovieCard = ({ movie }) => {
       </div>
 
       <div className="movie-info">
-        <h3 className="movie-title">{movie.title}</h3>
+        <h3 className="movie-title" title={movie.title}>{movie.title}</h3>
         <p className="movie-genre">{movie.genre?.join(', ')}</p>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.78rem', color: '#94a3b8', marginBottom: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-            <Clock size={13} />
-            <span>{movie.duration} mins</span>
+        <div style={{ marginTop: 'auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.85rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <Clock size={13} />
+              <span>{movie.duration} mins</span>
+            </div>
+            <div>{movie.language?.slice(0, 2).join(' • ')}</div>
           </div>
-          <div>{movie.language?.slice(0, 2).join(' • ')}</div>
-        </div>
 
-        <Link
-          to={`/movie/${movie._id}`}
-          className="btn-primary"
-          style={{ width: '100%', padding: '0.6rem 0', fontSize: '0.85rem' }}
-        >
-          Book Tickets
-        </Link>
+          <Link
+            to={`/movie/${movie._id}`}
+            className="btn-primary"
+            style={{ width: '100%', padding: '0.65rem 0', fontSize: '0.88rem' }}
+          >
+            Book Tickets
+          </Link>
+        </div>
       </div>
     </div>
   );

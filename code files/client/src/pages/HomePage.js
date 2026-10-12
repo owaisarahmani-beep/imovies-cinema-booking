@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import MovieCard from '../components/MovieCard';
-import { Search, Play, Sparkles, Filter, AlertCircle } from 'lucide-react';
+import { Search, Play, Sparkles, Filter, AlertCircle, RotateCcw, X } from 'lucide-react';
 
 const HomePage = ({ selectedCity }) => {
   const [movies, setMovies] = useState([]);
@@ -13,6 +13,14 @@ const HomePage = ({ selectedCity }) => {
   const [selectedLanguage, setSelectedLanguage] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+
+  const handleClearFilters = () => {
+    setSearchQuery('');
+    setSelectedGenre('All');
+    setSelectedLanguage('All');
+  };
+
+  const hasActiveFilters = searchQuery.trim() !== '' || selectedGenre !== 'All' || selectedLanguage !== 'All';
 
   // Fetch filter metadata (unique genres and languages)
   useEffect(() => {
@@ -71,7 +79,7 @@ const HomePage = ({ selectedCity }) => {
             minHeight: '480px',
             display: 'flex',
             alignItems: 'center',
-            backgroundImage: `linear-gradient(to right, rgba(11, 15, 25, 0.96) 25%, rgba(11, 15, 25, 0.6) 65%, rgba(11, 15, 25, 0.95) 100%), url(${featuredMovie.banner || featuredMovie.poster})`,
+            backgroundImage: `linear-gradient(90deg, rgba(11, 15, 25, 0.95) 0%, rgba(11, 15, 25, 0.82) 36%, rgba(11, 15, 25, 0.28) 72%, rgba(11, 15, 25, 0.6) 100%), linear-gradient(0deg, #0b0f19 0%, transparent 35%), url(${featuredMovie.banner || featuredMovie.poster})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center top',
             borderBottom: '1px solid var(--border-subtle)',
@@ -165,15 +173,36 @@ const HomePage = ({ selectedCity }) => {
                 background: 'transparent',
                 border: 'none',
                 color: 'white',
-                padding: '0.8rem 1rem 0.8rem 2.8rem',
+                padding: searchQuery ? '0.8rem 2.4rem 0.8rem 2.8rem' : '0.8rem 1rem 0.8rem 2.8rem',
                 fontSize: '0.92rem',
                 outline: 'none'
               }}
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                style={{
+                  position: 'absolute',
+                  right: '0.8rem',
+                  background: 'none',
+                  border: 'none',
+                  color: '#94a3b8',
+                  cursor: 'pointer',
+                  padding: '0.2rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                aria-label="Clear search"
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
 
           {/* Genre Filter Pills */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', overflowX: 'auto', paddingBottom: '0.3rem' }}>
+          <div className="filter-scroll-row">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem', color: '#94a3b8', marginRight: '0.5rem', flexShrink: 0 }}>
               <Filter size={15} /> Genre:
             </div>
@@ -190,7 +219,7 @@ const HomePage = ({ selectedCity }) => {
 
           {/* Language Filter Pills */}
           {languages.length > 2 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', overflowX: 'auto', paddingBottom: '0.3rem' }}>
+            <div className="filter-scroll-row">
               <div style={{ fontSize: '0.85rem', color: '#94a3b8', marginRight: '0.5rem', flexShrink: 0 }}>
                 Language:
               </div>
@@ -228,16 +257,34 @@ const HomePage = ({ selectedCity }) => {
             style={{
               textAlign: 'center',
               padding: '4rem 1rem',
-              background: '#121826',
+              background: 'var(--bg-surface)',
               borderRadius: '14px',
               border: '1px solid var(--border-subtle)'
             }}
           >
-            <AlertCircle size={40} color="#e50914" style={{ marginBottom: '1rem' }} />
+            <AlertCircle size={40} color="var(--accent-red)" style={{ marginBottom: '1rem' }} />
             <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.4rem' }}>No Movies Found</h3>
-            <p style={{ color: '#94a3b8', fontSize: '0.88rem' }}>
-              Try adjusting your search criteria or genre filters.
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: hasActiveFilters ? '1.5rem' : '0' }}>
+              {hasActiveFilters
+                ? 'No cinema listings match your search or filter criteria.'
+                : 'No movies are currently scheduled.'}
             </p>
+            {hasActiveFilters && (
+              <button
+                onClick={handleClearFilters}
+                className="btn-primary"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.65rem 1.4rem',
+                  fontSize: '0.88rem',
+                  cursor: 'pointer'
+                }}
+              >
+                <RotateCcw size={15} /> Clear All Filters
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid-movies">

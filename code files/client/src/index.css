@@ -4,28 +4,28 @@
    =================================================================== */
 
 :root {
-  --bg-main: #0b0f19;
-  --bg-surface: #121826;
+  --bg-main: #0B0F19;
+  --bg-surface: #121827;
   --bg-card: #182032;
   --bg-card-hover: #1f2942;
-  --bg-glass: rgba(18, 24, 38, 0.85);
+  --bg-glass: rgba(18, 24, 39, 0.85);
 
-  --accent-red: #e50914;
-  --accent-red-hover: #ff2e3b;
+  --accent-red: #F0142F;
+  --accent-red-hover: #ff2b44;
   --accent-gold: #f59e0b;
   --accent-cyan: #06b6d4;
   --accent-emerald: #10b981;
 
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
+  --text-main: #F8FAFC;
+  --text-muted: #9AAAC2;
   --text-dim: #64748b;
 
   --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(229, 9, 20, 0.4);
+  --border-focus: rgba(240, 20, 47, 0.45);
 
-  --seat-available: #334155;
-  --seat-selected: #e50914;
-  --seat-booked: #1e293b;
+  --seat-available: #202C3E;
+  --seat-selected: #F0142F;
+  --seat-booked: #121827;
   --seat-locked: #f59e0b;
   --seat-vip: #8b5cf6;
 }
@@ -59,6 +59,20 @@ button {
 
 input, select, textarea {
   font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-red);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent-red);
+  outline-offset: 2px;
 }
 
 /* Custom scrollbar */
@@ -203,11 +217,12 @@ input, select, textarea {
   display: flex;
   flex-direction: column;
   position: relative;
+  height: 100%;
 }
 .movie-card:hover {
   transform: translateY(-6px);
-  border-color: rgba(229, 9, 20, 0.35);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(229, 9, 20, 0.15);
+  border-color: rgba(240, 20, 47, 0.4);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45), 0 0 20px rgba(240, 20, 47, 0.18);
 }
 .movie-poster-wrap {
   position: relative;
@@ -261,16 +276,47 @@ input, select, textarea {
   flex-grow: 1;
 }
 .movie-title {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-main);
-  margin-bottom: 0.4rem;
-  line-height: 1.3;
+  margin-bottom: 0.35rem;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.7em;
 }
 .movie-genre {
   font-size: 0.82rem;
   color: var(--text-muted);
   margin-bottom: 0.8rem;
+}
+
+/* Filter Scroll Row */
+.filter-scroll-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  overflow-x: auto;
+  padding: 0.2rem 0.2rem 0.5rem 0.2rem;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+.filter-scroll-row::-webkit-scrollbar {
+  height: 4px;
+}
+.filter-scroll-row::-webkit-scrollbar-track {
+  background: transparent;
+}
+.filter-scroll-row::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+}
+.filter-scroll-row::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
 }
 
 /* Filter Pills */
@@ -285,6 +331,7 @@ input, select, textarea {
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .filter-pill:hover {
   background: var(--bg-card-hover);
@@ -295,7 +342,7 @@ input, select, textarea {
   background: var(--accent-red);
   color: white;
   border-color: var(--accent-red);
-  box-shadow: 0 0 12px rgba(229, 9, 20, 0.4);
+  box-shadow: 0 0 12px rgba(240, 20, 47, 0.4);
 }
 
 /* Cinema Interactive Screen Layout */
@@ -357,14 +404,14 @@ input, select, textarea {
   user-select: none;
 }
 .seat-available {
-  background: #1e293b;
+  background: var(--seat-available);
   color: var(--text-muted);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 .seat-available:hover {
-  background: #334155;
+  background: #2b3b52;
   color: white;
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.35);
   transform: scale(1.15);
 }
 .seat-selected {
