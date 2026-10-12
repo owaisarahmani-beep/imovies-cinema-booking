@@ -171,7 +171,7 @@ textarea:focus-visible {
 
 /* Primary Button */
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-red), #dc2626);
+  background: linear-gradient(135deg, var(--accent-red) 0%, #b91c1c 100%);
   color: white;
   padding: 0.65rem 1.4rem;
   border-radius: 8px;
@@ -181,13 +181,15 @@ textarea:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 14px rgba(229, 9, 20, 0.3);
-  transition: all 0.2s ease;
+  border: 1px solid rgba(240, 20, 47, 0.4);
+  box-shadow: 0 4px 14px rgba(240, 20, 47, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-primary:hover {
-  background: linear-gradient(135deg, var(--accent-red-hover), #e50914);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(229, 9, 20, 0.45);
+  background: linear-gradient(135deg, var(--accent-red-hover) 0%, #dc2626 100%);
+  transform: translateY(-2px);
+  border-color: var(--accent-red-hover);
+  box-shadow: 0 6px 22px rgba(240, 20, 47, 0.55);
 }
 .btn-secondary {
   background: rgba(255, 255, 255, 0.08);
@@ -200,19 +202,21 @@ textarea:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border: 1px solid var(--border-subtle);
-  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-secondary:hover {
   background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
 }
 
 /* Movie Card */
 .movie-card {
-  background: var(--bg-card);
+  background: linear-gradient(180deg, var(--bg-card) 0%, #101626 100%);
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
@@ -220,9 +224,9 @@ textarea:focus-visible {
   height: 100%;
 }
 .movie-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(240, 20, 47, 0.4);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45), 0 0 20px rgba(240, 20, 47, 0.18);
+  transform: translateY(-8px);
+  border-color: rgba(240, 20, 47, 0.45);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(240, 20, 47, 0.2);
 }
 .movie-poster-wrap {
   position: relative;
@@ -346,28 +350,30 @@ textarea:focus-visible {
 
 /* Filter Pills */
 .filter-pill {
-  background: var(--bg-card);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--text-muted);
-  padding: 0.5rem 1.1rem;
+  padding: 0.45rem 1.15rem;
   border-radius: 9999px;
   font-size: 0.85rem;
   font-weight: 500;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
   flex-shrink: 0;
 }
 .filter-pill:hover {
-  background: var(--bg-card-hover);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--text-main);
   border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
 }
 .filter-pill.active {
-  background: var(--accent-red);
+  background: linear-gradient(135deg, var(--accent-red) 0%, #c8102e 100%);
   color: white;
   border-color: var(--accent-red);
-  box-shadow: 0 0 12px rgba(240, 20, 47, 0.4);
+  box-shadow: 0 4px 14px rgba(240, 20, 47, 0.45);
+  font-weight: 600;
 }
 
 /* Cinema Interactive Screen Layout */
