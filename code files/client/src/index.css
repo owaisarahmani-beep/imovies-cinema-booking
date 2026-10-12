@@ -293,30 +293,55 @@ textarea:focus-visible {
   margin-bottom: 0.8rem;
 }
 
+/* Search Box Wrapper */
+.search-box-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+.search-box-wrap:focus-within {
+  border-color: var(--accent-red);
+  box-shadow: 0 0 12px rgba(240, 20, 47, 0.25);
+}
+
 /* Filter Scroll Row */
 .filter-scroll-row {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   overflow-x: auto;
-  padding: 0.2rem 0.2rem 0.5rem 0.2rem;
+  padding: 0.25rem 0.25rem 0.6rem 0.25rem;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
 }
 .filter-scroll-row::-webkit-scrollbar {
   height: 4px;
 }
 .filter-scroll-row::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
 }
 .filter-scroll-row::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.22);
   border-radius: 4px;
 }
 .filter-scroll-row::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.35);
+  background: var(--accent-red);
+}
+.filter-scroll-row::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+@supports not selector(::-webkit-scrollbar) {
+  .filter-scroll-row {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
 }
 
 /* Filter Pills */

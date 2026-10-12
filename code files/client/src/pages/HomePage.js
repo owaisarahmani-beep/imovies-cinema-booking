@@ -141,7 +141,7 @@ const HomePage = ({ selectedCity }) => {
         {/* Search & Filter Toolbar */}
         <div
           style={{
-            background: '#121826',
+            background: 'var(--bg-surface)',
             border: '1px solid var(--border-subtle)',
             borderRadius: '14px',
             padding: '1.25rem',
@@ -151,17 +151,36 @@ const HomePage = ({ selectedCity }) => {
             gap: '1rem'
           }}
         >
+          {/* Active Filters Bar */}
+          {hasActiveFilters && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.82rem', color: 'var(--accent-red)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Filter size={13} /> Active filters applied
+              </span>
+              <button
+                type="button"
+                onClick={handleClearFilters}
+                style={{
+                  background: 'rgba(240, 20, 47, 0.12)',
+                  border: '1px solid rgba(240, 20, 47, 0.3)',
+                  color: 'var(--accent-red-hover)',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  borderRadius: '6px',
+                  padding: '0.25rem 0.65rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem'
+                }}
+              >
+                <RotateCcw size={12} /> Reset All Filters
+              </button>
+            </div>
+          )}
+
           {/* Search Box */}
-          <div
-            style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              background: '#182032',
-              borderRadius: '8px',
-              border: '1px solid rgba(255, 255, 255, 0.08)'
-            }}
-          >
+          <div className="search-box-wrap">
             <Search size={18} style={{ position: 'absolute', left: '1rem', color: '#94a3b8' }} />
             <input
               type="text"
