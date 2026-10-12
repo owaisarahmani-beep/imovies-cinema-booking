@@ -7,6 +7,8 @@
 
 A modern, production-grade **MERN (MongoDB, Express.js, React.js, Node.js)** cinema ticket reservation platform inspired by BookMyShow and AMC Theatres. Featuring **real-time WebSocket seat locking via Socket.IO**, multi-city cinema discovery, authentic theatrical blockbusters, transparent pricing breakdowns, and an administrative cinema management panel.
 
+🌐 **Live Deployed Application:** [https://imovies-cinema-booking.onrender.com](https://imovies-cinema-booking.onrender.com)
+
 > **Project Submission for:** SmartBridge / Naan Mudhalvan — Full Stack Developer (MERN)
 
 ---
