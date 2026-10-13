@@ -62,8 +62,8 @@ const moviesData = [
   {
     title: 'Kalki 2898 AD',
     description: 'Set in a post-apocalyptic world in the year 2898 AD, a modern-day avatar of Vishnu descends to Earth to protect the world from evil forces. An epic sci-fi mythological spectacle traversing centuries.',
-    poster: 'https://upload.wikimedia.org/wikipedia/en/4/4c/Kalki_2898_AD.jpg',
-    banner: 'https://images.justwatch.com/backdrop/318182245/s1920/kalki-2898-ad.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/rstcAnBeCkxNQjNp3YXrF6IP1tW.jpg',
+    banner: 'https://image.tmdb.org/t/p/original/o8XSR1SONnjcsv84NRu6Mwsl5io.jpg',
     trailerUrl: 'https://www.youtube.com/watch?v=kQDd1AhGIHk',
     genre: ['Sci-Fi', 'Action', 'Mythology'],
     language: ['Hindi', 'Telugu', 'Tamil', 'English'],
@@ -92,8 +92,8 @@ const moviesData = [
   {
     title: 'Stree 2: Sarkate Ka Aatank',
     description: 'After the events of Stree, the town of Chanderi is haunted by a new headless ghost named Sarkata, who abducts women. Vicky and his friends must summon the original Stree to rescue their loved ones.',
-    poster: 'https://upload.wikimedia.org/wikipedia/en/a/a1/Stree_2.jpg',
-    banner: 'https://image.tmdb.org/t/p/original/fVV0A67kDjTTQ4CvUn8LoletRmI.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/lZPvLUMYEPLTE2df1VW5FHTYC8N.jpg',
+    banner: 'https://image.tmdb.org/t/p/original/wFqJMVP0nrsgKeA2kwshRkIz1fw.jpg',
     trailerUrl: 'https://www.youtube.com/watch?v=KVnhe_x031k',
     genre: ['Comedy', 'Horror'],
     language: ['Hindi'],
@@ -137,8 +137,8 @@ const moviesData = [
   {
     title: 'Pushpa 2: The Rule',
     description: 'The epic clash between Pushpa Raj and SP Bhanwar Singh Shekhawat escalates. Pushpa consolidates his sandalwood smuggling syndicate across international borders while defying the law.',
-    poster: 'https://upload.wikimedia.org/wikipedia/en/1/11/Pushpa_2-_The_Rule.jpg',
-    banner: 'https://wallpaperaccess.com/full/9557487.jpg',
+    poster: 'https://www.impawards.com/intl/india/2024/posters/pushpa_the_rule__part_two.jpg',
+    banner: 'https://image.tmdb.org/t/p/original/7jGItf7idJsBm9QTNoTNTU3KiGe.jpg',
     trailerUrl: 'https://www.youtube.com/watch?v=1kVK0MZlbI4',
     genre: ['Action', 'Crime', 'Thriller'],
     language: ['Telugu', 'Hindi', 'Tamil', 'Kannada'],
@@ -152,8 +152,8 @@ const moviesData = [
   {
     title: 'Moana 2',
     description: 'After an unexpected call from her ancestral wayfinders, Moana journeys across the far seas of Oceania into dangerous uncharted waters for an adventure reunited with the demigod Maui.',
-    poster: 'https://upload.wikimedia.org/wikipedia/en/7/73/Moana_2_poster.jpg',
-    banner: 'https://image.tmdb.org/t/p/original/6qld2YxAO9gdEblo0rsEb8BcYKO.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/aLVkiINlIeCkcZIzb7XHzPYgO6L.jpg',
+    banner: 'https://image.tmdb.org/t/p/original/zo8CIjJ2nfNOevqNajwMRO6Hwka.jpg',
     trailerUrl: 'https://www.youtube.com/watch?v=hDZ7y8RP5HE',
     genre: ['Animation', 'Adventure', 'Family'],
     language: ['English', 'Hindi'],
@@ -167,7 +167,7 @@ const moviesData = [
   {
     title: 'Venom: The Last Dance',
     description: 'Eddie Brock and Venom are hunted by both of their worlds. With the net closing in rapidly, the duo are forced into a devastating choice that will bring down the curtains on their final dance.',
-    poster: 'https://upload.wikimedia.org/wikipedia/en/a/a3/Venom_The_Last_Dance_Poster.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/vGXptEdgZIhPg3cGlc7e8sNPC2e.jpg',
     banner: 'https://image.tmdb.org/t/p/original/3V4kLQg0kSqPLctI5ziYWabAZYF.jpg',
     trailerUrl: 'https://www.youtube.com/watch?v=__2bjWbetsA',
     genre: ['Action', 'Sci-Fi', 'Adventure'],
@@ -182,7 +182,7 @@ const moviesData = [
   {
     title: 'Wicked',
     description: 'The untold journey of the witches of Oz: Elphaba, misunderstood for her emerald-green skin, and Glinda, the popular golden girl, whose friendship redefines the fate of the magical realm.',
-    poster: 'https://upload.wikimedia.org/wikipedia/en/3/3c/Wicked_%282024_film%29_poster.png',
+    poster: 'https://image.tmdb.org/t/p/w500/xDGbZ0JJ3mYaGKy4Nzd9Kph6M9L.jpg',
     banner: 'https://image.tmdb.org/t/p/original/uKb22E0nlzr914bA9KyA5CVCOlV.jpg',
     trailerUrl: 'https://www.youtube.com/watch?v=6COmYeLsz4c',
     genre: ['Fantasy', 'Musical', 'Romance'],
@@ -197,8 +197,8 @@ const moviesData = [
   {
     title: 'Bhool Bhulaiyaa 3',
     description: 'Rooh Baba returns to resolve a haunting in a royal mansion, only to be confronted by two terrifying spirits claiming to be the authentic Manjulika. A hilarious and chilling mystery.',
-    poster: 'https://upload.wikimedia.org/wikipedia/en/e/e4/Bhool_Bhulaiyaa_3_poster.jpg',
-    banner: 'https://images.justwatch.com/backdrop/321853460/s1920/bhool-bhulaiyaa-3.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/3AfHD1HoaQpQwKH8kxRdBKVmzeU.jpg',
+    banner: 'https://image.tmdb.org/t/p/original/8JyMB2DQ61ow7wgRg09h1znjcRY.jpg',
     trailerUrl: 'https://www.youtube.com/watch?v=y_x88C1X9oY',
     genre: ['Comedy', 'Horror'],
     language: ['Hindi'],
@@ -212,8 +212,8 @@ const moviesData = [
   {
     title: 'Singham Again',
     description: 'DCP Bajirao Singham leads a fierce inter-agency anti-terror team across India and Sri Lanka to rescue his kidnapped wife Avni from the ruthless terrorist Danger Lanka.',
-    poster: 'https://upload.wikimedia.org/wikipedia/en/e/eb/Singham_Again_poster.jpg',
-    banner: 'https://image.tmdb.org/t/p/original/2JbNkHg8m7LaBy61LyrnnlenaxY.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/2JbNkHg8m7LaBy61LyrnnlenaxY.jpg',
+    banner: 'https://image.tmdb.org/t/p/original/lexEx0B4WDOXGfqPTj4R8FCrE7H.jpg',
     trailerUrl: 'https://www.youtube.com/watch?v=1oW_W1QZ1f4',
     genre: ['Action', 'Drama', 'Thriller'],
     language: ['Hindi'],
