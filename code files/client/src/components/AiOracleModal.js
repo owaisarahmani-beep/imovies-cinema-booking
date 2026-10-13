@@ -14,7 +14,8 @@ const MOOD_PRESETS = [
 ];
 
 const scoreMovie = (movie, query) => {
-  const q = query.toLowerCase().trim();
+  if (!movie) return 0;
+  const q = (query || '').toLowerCase().trim();
   if (!q) return 0;
 
   const terms = q.split(/\s+/).filter(Boolean);
@@ -73,9 +74,10 @@ const scoreMovie = (movie, query) => {
 };
 
 const generateReasoning = (movie, query) => {
+  if (!movie) return '';
   const ratingText = movie.rating ? `rated ${movie.rating}/10 on IMDb` : 'critically acclaimed';
   const genreList = movie.genre?.join(', ') || 'Feature Film';
-  const durationText = `${movie.duration} minutes`;
+  const durationText = `${movie.duration || 120} minutes`;
 
   const q = query.toLowerCase();
   if (q.includes('family') || q.includes('kids') || q.includes('animated')) {
@@ -123,7 +125,7 @@ const AiOracleModal = ({ isOpen, onClose, movies = [], onPlayTrailer }) => {
 
     // Pick top 3
     const topPicks = scored.slice(0, 3);
-    const maxScore = topPicks[0]?.score || 100;
+    const maxScore = (topPicks[0]?.score && topPicks[0].score > 0) ? topPicks[0].score : 100;
 
     const formatted = topPicks.map((item, idx) => {
       const matchPct = Math.min(99, Math.max(78, Math.round((item.score / maxScore) * 98) - idx * 3));

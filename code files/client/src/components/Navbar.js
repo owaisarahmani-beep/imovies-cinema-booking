@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import { safeStorage } from '../utils/safeStorage';
 import { Film, Bell, User, LogOut, ShieldCheck, Ticket, MapPin, Menu, X, LocateFixed, Loader2 } from 'lucide-react';
 
 const CITY_COORDINATES = {
@@ -58,7 +59,7 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
 
   // Restore saved city from previous session
   useEffect(() => {
-    const saved = localStorage.getItem('imovies_user_city');
+    const saved = safeStorage.getItem('imovies_user_city');
     if (saved && selectedCity === 'All') {
       setSelectedCity(saved);
     }
@@ -84,7 +85,7 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
           const matched = cities.find(c => c.toLowerCase() === detectedName?.toLowerCase());
           if (matched) {
             setSelectedCity(matched);
-            localStorage.setItem('imovies_user_city', matched);
+            safeStorage.setItem('imovies_user_city', matched);
             setLocationStatus(`📍 Detected: ${matched}`);
             setIsDetectingLocation(false);
             setTimeout(() => setLocationStatus(null), 4000);
@@ -94,7 +95,7 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
 
         const { city, distance } = findClosestCity(latitude, longitude);
         setSelectedCity(city);
-        localStorage.setItem('imovies_user_city', city);
+        safeStorage.setItem('imovies_user_city', city);
         setLocationStatus(`📍 Nearest: ${city} (~${distance} km)`);
         setIsDetectingLocation(false);
         setTimeout(() => setLocationStatus(null), 4000);
@@ -115,12 +116,12 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
         const matched = cities.find(c => c.toLowerCase() === data.city?.toLowerCase());
         if (matched) {
           setSelectedCity(matched);
-          localStorage.setItem('imovies_user_city', matched);
+          safeStorage.setItem('imovies_user_city', matched);
           setLocationStatus(`📍 Detected: ${matched}`);
         } else {
           const { city } = findClosestCity(data.latitude, data.longitude);
           setSelectedCity(city);
-          localStorage.setItem('imovies_user_city', city);
+          safeStorage.setItem('imovies_user_city', city);
           setLocationStatus(`📍 Nearest: ${city}`);
         }
       } else {
@@ -188,7 +189,7 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
               onChange={(e) => {
                 setSelectedCity(e.target.value);
                 if (e.target.value !== 'All') {
-                  localStorage.setItem('imovies_user_city', e.target.value);
+                  safeStorage.setItem('imovies_user_city', e.target.value);
                 }
               }}
               style={{
@@ -502,7 +503,7 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
                 onChange={(e) => {
                   setSelectedCity(e.target.value);
                   if (e.target.value !== 'All') {
-                    localStorage.setItem('imovies_user_city', e.target.value);
+                    safeStorage.setItem('imovies_user_city', e.target.value);
                   }
                   setIsMobileMenuOpen(false);
                 }}

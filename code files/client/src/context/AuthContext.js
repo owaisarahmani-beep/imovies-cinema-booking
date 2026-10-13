@@ -1,11 +1,12 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import api from '../services/api';
+import { safeStorage } from '../utils/safeStorage';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('imovies_token') || null);
+  const [token, setToken] = useState(() => safeStorage.getItem('imovies_token'));
   const [loading, setLoading] = useState(true);
 
   // Load user profile if token is present
@@ -23,7 +24,7 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.error('Failed to fetch user session:', error);
-        localStorage.removeItem('imovies_token');
+        safeStorage.removeItem('imovies_token');
         setToken(null);
         setUser(null);
       } finally {
@@ -38,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
     if (res.data.success) {
-      localStorage.setItem('imovies_token', res.data.token);
+      safeStorage.setItem('imovies_token', res.data.token);
       setToken(res.data.token);
       setUser(res.data.user);
       return res.data;
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     const res = await api.post('/auth/register', userData);
     if (res.data.success) {
-      localStorage.setItem('imovies_token', res.data.token);
+      safeStorage.setItem('imovies_token', res.data.token);
       setToken(res.data.token);
       setUser(res.data.user);
       return res.data;
@@ -58,7 +59,7 @@ export const AuthProvider = ({ children }) => {
 
   // Logout handler
   const logout = () => {
-    localStorage.removeItem('imovies_token');
+    safeStorage.removeItem('imovies_token');
     setToken(null);
     setUser(null);
   };

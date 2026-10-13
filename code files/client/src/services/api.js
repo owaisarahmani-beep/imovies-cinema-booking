@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { safeStorage } from '../utils/safeStorage';
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5000/api'),
@@ -10,7 +11,7 @@ const api = axios.create({
 // Request interceptor to automatically attach JWT token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('imovies_token');
+    const token = safeStorage.getItem('imovies_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -25,8 +26,8 @@ api.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       // If unauthorized on protected route, clean storage if needed
-      if (localStorage.getItem('imovies_token') && !window.location.pathname.includes('/login')) {
-        // localStorage.removeItem('imovies_token');
+      if (safeStorage.getItem('imovies_token') && !window.location.pathname.includes('/login')) {
+        // safeStorage.removeItem('imovies_token');
       }
     }
     return Promise.reject(error);
