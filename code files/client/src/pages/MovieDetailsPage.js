@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../services/api';
+import TrailerModal from '../components/TrailerModal';
 import { Star, Clock, Calendar, MapPin, Play, UserCheck, Shield } from 'lucide-react';
 
 const MovieDetailsPage = ({ selectedCity }) => {
@@ -9,6 +10,7 @@ const MovieDetailsPage = ({ selectedCity }) => {
   const [theatres, setTheatres] = useState([]);
   const [selectedDate, setSelectedDate] = useState(0); // 0 = Today, 1 = Tomorrow, 2 = Day 3
   const [loading, setLoading] = useState(true);
+  const [isTrailerOpen, setIsTrailerOpen] = useState(false);
 
   // Generate 4 consecutive dates for the date picker
   const dateOptions = [0, 1, 2, 3].map((offset) => {
@@ -122,10 +124,11 @@ const MovieDetailsPage = ({ selectedCity }) => {
                 {movie.title}
               </h1>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '1.2rem', color: '#cbd5e1', fontSize: '0.9rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '1.2rem', color: '#cbd5e1', fontSize: '0.9rem', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#fbbf24', fontWeight: 700 }}>
                   <Star size={16} fill="#fbbf24" />
                   <span>{movie.rating ? movie.rating.toFixed(1) : '8.5'}/10</span>
+                  <span style={{ fontSize: '0.65rem', fontWeight: 800, background: '#f5c518', color: '#000', padding: '1px 4px', borderRadius: '3px', marginLeft: '2px' }}>IMDb</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <Clock size={16} />
@@ -139,15 +142,24 @@ const MovieDetailsPage = ({ selectedCity }) => {
               </p>
 
               {movie.trailerUrl && (
-                <a
-                  href={movie.trailerUrl}
-                  target="_blank"
-                  rel="noreferrer"
+                <button
+                  type="button"
+                  onClick={() => setIsTrailerOpen(true)}
                   className="btn-secondary"
-                  style={{ padding: '0.6rem 1.2rem', fontSize: '0.85rem' }}
+                  style={{
+                    padding: '0.65rem 1.25rem',
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    backdropFilter: 'blur(8px)'
+                  }}
                 >
-                  <Play size={14} fill="white" /> Watch Trailer
-                </a>
+                  <Play size={14} fill="white" /> Watch Official Trailer
+                </button>
               )}
             </div>
           </div>
@@ -343,6 +355,14 @@ const MovieDetailsPage = ({ selectedCity }) => {
           )}
         </div>
       </div>
+
+      {/* In-App Video Trailer Modal */}
+      <TrailerModal
+        isOpen={isTrailerOpen}
+        onClose={() => setIsTrailerOpen(false)}
+        movieTitle={movie?.title}
+        trailerUrl={movie?.trailerUrl}
+      />
     </div>
   );
 };

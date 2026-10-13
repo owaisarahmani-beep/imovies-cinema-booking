@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import MovieCard from '../components/MovieCard';
+import TrailerModal from '../components/TrailerModal';
+import AiOracleModal from '../components/AiOracleModal';
 import { Search, Play, Sparkles, Filter, AlertCircle, RotateCcw, X, Star, Clock, Ticket, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HomePage = ({ selectedCity }) => {
@@ -13,6 +15,10 @@ const HomePage = ({ selectedCity }) => {
   const [selectedLanguage, setSelectedLanguage] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+
+  // In-App Trailer Modal & AI Oracle State
+  const [activeTrailerMovie, setActiveTrailerMovie] = useState(null);
+  const [isOracleOpen, setIsOracleOpen] = useState(false);
 
   // Hero Spotlight Carousel State
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -94,7 +100,7 @@ const HomePage = ({ selectedCity }) => {
     const fetchMovies = async () => {
       setLoading(true);
       try {
-        const params = {};
+        const params = { limit: 50 };
         if (searchQuery) params.search = searchQuery;
         if (selectedGenre !== 'All') params.genre = selectedGenre;
         if (selectedLanguage !== 'All') params.language = selectedLanguage;
@@ -222,16 +228,25 @@ const HomePage = ({ selectedCity }) => {
                   Book Tickets Now
                 </Link>
                 {activeMovie.trailerUrl && (
-                  <a
-                    href={activeMovie.trailerUrl}
-                    target="_blank"
-                    rel="noreferrer"
+                  <button
+                    type="button"
+                    onClick={() => setActiveTrailerMovie(activeMovie)}
                     className="btn-secondary"
-                    style={{ padding: '0.85rem 1.6rem', fontSize: '0.95rem', background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)' }}
+                    style={{
+                      padding: '0.85rem 1.6rem',
+                      fontSize: '0.95rem',
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      backdropFilter: 'blur(8px)',
+                      cursor: 'pointer',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem'
+                    }}
                   >
                     <Play size={16} fill="white" />
                     Watch Trailer
-                  </a>
+                  </button>
                 )}
               </div>
             </div>
@@ -390,9 +405,34 @@ const HomePage = ({ selectedCity }) => {
               {selectedCity !== 'All' ? `Featuring premiere screens across ${selectedCity}` : 'Explore blockbuster releases near you'}
             </p>
           </div>
-          <span style={{ fontSize: '0.82rem', color: '#94a3b8', background: 'rgba(255, 255, 255, 0.05)', padding: '0.35rem 0.8rem', borderRadius: '9999px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-            {movies.length} Releases Available
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              onClick={() => setIsOracleOpen(true)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                background: 'linear-gradient(135deg, rgba(240, 20, 47, 0.25) 0%, rgba(18, 24, 39, 0.95) 100%)',
+                color: '#f8fafc',
+                border: '1px solid rgba(240, 20, 47, 0.45)',
+                padding: '0.42rem 0.9rem',
+                borderRadius: '8px',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 4px 15px rgba(240, 20, 47, 0.2)',
+                transition: 'all 0.2s ease'
+              }}
+              title="Get personalized recommendations from AI Cinema Oracle"
+            >
+              <Sparkles size={14} color="#fbbf24" />
+              <span>Ask AI Oracle</span>
+            </button>
+            <span style={{ fontSize: '0.82rem', color: '#94a3b8', background: 'rgba(255, 255, 255, 0.05)', padding: '0.35rem 0.8rem', borderRadius: '9999px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+              {movies.length} Releases Available
+            </span>
+          </div>
         </div>
 
         {/* Movie Grid */}
@@ -437,11 +477,61 @@ const HomePage = ({ selectedCity }) => {
         ) : (
           <div className="grid-movies">
             {movies.map((movie) => (
-              <MovieCard key={movie._id} movie={movie} />
+              <MovieCard key={movie._id} movie={movie} onPlayTrailer={setActiveTrailerMovie} />
             ))}
           </div>
         )}
       </div>
+
+      {/* Floating AI Cinema Oracle Action Button */}
+      <button
+        type="button"
+        onClick={() => setIsOracleOpen(true)}
+        style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          zIndex: 900,
+          background: 'linear-gradient(135deg, #F0142F 0%, #990B1E 100%)',
+          color: '#ffffff',
+          border: '1px solid rgba(255, 255, 255, 0.25)',
+          borderRadius: '9999px',
+          padding: '0.75rem 1.25rem',
+          fontSize: '0.88rem',
+          fontWeight: 800,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.55rem',
+          cursor: 'pointer',
+          boxShadow: '0 10px 25px rgba(240, 20, 47, 0.45), 0 0 20px rgba(240, 20, 47, 0.3)',
+          transition: 'all 0.2s ease',
+          backdropFilter: 'blur(10px)'
+        }}
+        title="Open AI Cinema Oracle"
+        aria-label="Open AI Cinema Oracle"
+      >
+        <Sparkles size={17} color="#fbbf24" />
+        <span>Ask AI Oracle</span>
+      </button>
+
+      {/* In-App Video Trailer Modal */}
+      <TrailerModal
+        isOpen={!!activeTrailerMovie}
+        onClose={() => setActiveTrailerMovie(null)}
+        movieTitle={activeTrailerMovie?.title}
+        trailerUrl={activeTrailerMovie?.trailerUrl}
+      />
+
+      {/* AI Cinema Oracle Modal */}
+      <AiOracleModal
+        isOpen={isOracleOpen}
+        onClose={() => setIsOracleOpen(false)}
+        movies={movies}
+        onPlayTrailer={(m) => {
+          setIsOracleOpen(false);
+          setActiveTrailerMovie(m);
+        }}
+      />
     </div>
   );
 };

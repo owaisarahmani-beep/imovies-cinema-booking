@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Star, Clock, Ticket } from 'lucide-react';
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie, onPlayTrailer }) => {
   return (
     <div className="movie-card">
       <div className="movie-poster-wrap">
@@ -28,11 +28,45 @@ const MovieCard = ({ movie }) => {
             pointerEvents: 'none'
           }}
         />
-        <div className="rating-badge">
-          <Star size={12} fill="#fbbf24" color="#fbbf24" />
+        <div className="rating-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+          <Star size={11} fill="#fbbf24" color="#fbbf24" />
           <span>{movie.rating ? movie.rating.toFixed(1) : '8.5'}</span>
+          <span style={{ fontSize: '0.62rem', fontWeight: 800, background: '#f5c518', color: '#000', padding: '1px 3px', borderRadius: '2px', marginLeft: '2px' }}>IMDb</span>
         </div>
         <div className="cert-pill">{movie.certificate || 'U/A'}</div>
+
+        {movie.trailerUrl && onPlayTrailer && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onPlayTrailer(movie);
+            }}
+            style={{
+              position: 'absolute',
+              top: '10px',
+              left: '10px',
+              background: 'rgba(11, 15, 25, 0.75)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#fff',
+              borderRadius: '50%',
+              width: '32px',
+              height: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.5)',
+              backdropFilter: 'blur(4px)',
+              transition: 'transform 0.15s, background 0.15s'
+            }}
+            title="Watch Official Trailer"
+            aria-label={`Watch trailer for ${movie.title}`}
+          >
+            <Play size={14} fill="#fff" style={{ marginLeft: '1px' }} />
+          </button>
+        )}
       </div>
 
       <div className="movie-info">
