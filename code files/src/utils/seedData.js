@@ -523,14 +523,17 @@ const seedDatabase = async () => {
       for (let tIndex = 0; tIndex < createdTheatres.length; tIndex++) {
         const theatre = createdTheatres[tIndex];
 
-        // Pick 2 alternating movies for this theatre
-        const movie1 = createdMovies[tIndex % createdMovies.length];
-        const movie2 = createdMovies[(tIndex + 1) % createdMovies.length];
-        const assignedMovies = [movie1, movie2];
+        // Assign 4 show times per theatre, rotating across all movies so all 19 get scheduled
+        const assignedMovies = [
+          createdMovies[(tIndex * 2 + dayOffset * 5) % createdMovies.length],
+          createdMovies[(tIndex * 2 + 1 + dayOffset * 5) % createdMovies.length],
+          createdMovies[(tIndex * 2 + 7 + dayOffset * 3) % createdMovies.length],
+          createdMovies[(tIndex * 2 + 13 + dayOffset * 7) % createdMovies.length]
+        ];
 
         for (let mIdx = 0; mIdx < assignedMovies.length; mIdx++) {
           const movie = assignedMovies[mIdx];
-          const time = showTimes[mIdx * 2]; // e.g. 10:30 AM or 06:45 PM
+          const time = showTimes[mIdx]; // 10:30 AM, 02:15 PM, 06:45 PM, 10:00 PM
           const pricing = { vip: 350, premium: 250, standard: 180 };
 
           const show = await Show.create({
