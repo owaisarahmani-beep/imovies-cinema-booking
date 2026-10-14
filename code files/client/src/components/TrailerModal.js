@@ -28,8 +28,11 @@ const TrailerModal = ({ isOpen, onClose, movieTitle, trailerUrl }) => {
   if (!isOpen || !trailerUrl) return null;
 
   const videoId = extractYouTubeId(trailerUrl);
+  const originParam = typeof window !== 'undefined' && window.location.origin
+    ? `&origin=${encodeURIComponent(window.location.origin)}`
+    : '';
   const embedUrl = videoId
-    ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`
+    ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1${originParam}`
     : null;
 
   return (
@@ -150,6 +153,7 @@ const TrailerModal = ({ isOpen, onClose, movieTitle, trailerUrl }) => {
               title={`${movieTitle} Official Trailer`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
               style={{
                 position: 'absolute',
                 top: 0,

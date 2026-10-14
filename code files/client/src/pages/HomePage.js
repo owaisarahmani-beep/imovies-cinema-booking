@@ -33,8 +33,16 @@ const HomePage = ({ selectedCity }) => {
 
   const hasActiveFilters = searchQuery.trim() !== '' || selectedGenre !== 'All' || selectedLanguage !== 'All';
 
-  // Get top featured movies for the hero carousel (up to 6 spotlight titles)
-  const spotlightMovies = movies.length > 0 ? movies.slice(0, 6) : (featuredMovie ? [featuredMovie] : []);
+  // Get top featured movies for the hero carousel (curate cinematic visual blockbusters with 16:9 4K landscape backdrops)
+  const cinematicCandidates = movies.filter(m =>
+    m.banner &&
+    (m.banner.includes('image.tmdb.org') || m.rating >= 6.8) &&
+    !m.title.toLowerCase().includes('doraemon') &&
+    !m.title.toLowerCase().includes('other mommy')
+  );
+  const spotlightMovies = cinematicCandidates.length >= 3
+    ? cinematicCandidates.slice(0, 6)
+    : (movies.length > 0 ? movies.slice(0, 6) : (featuredMovie ? [featuredMovie] : []));
   const activeMovie = spotlightMovies[currentSlide] || featuredMovie || movies[0];
 
   // Auto-play timer for hero carousel: smoothly cycles every 4.5 seconds
@@ -171,83 +179,115 @@ const HomePage = ({ selectedCity }) => {
           )}
 
           <div className="container" style={{ width: '100%', position: 'relative', zIndex: 2 }}>
-            <div style={{ maxWidth: '660px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '3rem' }}>
+              <div style={{ maxWidth: '640px', flex: '1 1 auto' }}>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    background: 'rgba(240, 20, 47, 0.18)',
+                    color: '#ff4d58',
+                    padding: '0.35rem 0.85rem',
+                    borderRadius: '9999px',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    marginBottom: '1rem',
+                    border: '1px solid rgba(240, 20, 47, 0.35)',
+                    boxShadow: '0 0 16px rgba(240, 20, 47, 0.2)'
+                  }}
+                >
+                  <Sparkles size={14} /> SPOTLIGHT CINEMA {spotlightMovies.length > 1 ? `• ${currentSlide + 1}/${spotlightMovies.length}` : ''}
+                </div>
+
+                <h1 style={{ fontSize: '3rem', fontWeight: 900, lineHeight: 1.1, marginBottom: '0.9rem', color: '#f8fafc', letterSpacing: '-0.5px' }}>
+                  {activeMovie.title}
+                </h1>
+
+                {/* Rich Movie Meta Badges */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(251, 191, 36, 0.15)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.35)', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 700 }}>
+                    <Star size={13} fill="#fbbf24" color="#fbbf24" />
+                    <span>{typeof activeMovie.rating === 'number' ? activeMovie.rating.toFixed(1) : (activeMovie.rating || '8.5')}</span>
+                  </div>
+                  <div style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#f8fafc', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700 }}>
+                    {activeMovie.certificate || 'U/A'}
+                  </div>
+                  {activeMovie.duration && (
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#cbd5e1', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 600 }}>
+                      <Clock size={13} />
+                      <span>{activeMovie.duration} mins</span>
+                    </div>
+                  )}
+                  {activeMovie.genre && activeMovie.genre.length > 0 && (
+                    <div style={{ color: '#94a3b8', fontSize: '0.82rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <span>•</span>
+                      <span>{activeMovie.genre.slice(0, 3).join(' • ')}</span>
+                    </div>
+                  )}
+                </div>
+
+                <p style={{ color: '#cbd5e1', fontSize: '0.96rem', lineHeight: 1.6, marginBottom: '1.6rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {activeMovie.description}
+                </p>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                  <Link to={`/movie/${activeMovie._id}`} className="btn-primary" style={{ padding: '0.85rem 1.85rem', fontSize: '0.95rem' }}>
+                    <Ticket size={17} />
+                    Book Tickets Now
+                  </Link>
+                  {activeMovie.trailerUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveTrailerMovie(activeMovie)}
+                      className="btn-secondary"
+                      style={{
+                        padding: '0.85rem 1.6rem',
+                        fontSize: '0.95rem',
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        backdropFilter: 'blur(8px)',
+                        cursor: 'pointer',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                      }}
+                    >
+                      <Play size={16} fill="white" />
+                      Watch Trailer
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Right Side: Floating Glassmorphic 3D Movie Poster Card (Desktop) */}
               <div
+                className="spotlight-poster-card"
                 style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.45rem',
-                  background: 'rgba(240, 20, 47, 0.18)',
-                  color: '#ff4d58',
-                  padding: '0.35rem 0.85rem',
-                  borderRadius: '9999px',
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
-                  marginBottom: '1rem',
-                  border: '1px solid rgba(240, 20, 47, 0.35)',
-                  boxShadow: '0 0 16px rgba(240, 20, 47, 0.2)'
+                  flexShrink: 0,
+                  position: 'relative'
                 }}
               >
-                <Sparkles size={14} /> SPOTLIGHT CINEMA {spotlightMovies.length > 1 ? `• ${currentSlide + 1}/${spotlightMovies.length}` : ''}
-              </div>
-
-              <h1 style={{ fontSize: '3rem', fontWeight: 900, lineHeight: 1.1, marginBottom: '0.9rem', color: '#f8fafc', letterSpacing: '-0.5px' }}>
-                {activeMovie.title}
-              </h1>
-
-              {/* Rich Movie Meta Badges */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(251, 191, 36, 0.15)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.35)', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 700 }}>
-                  <Star size={13} fill="#fbbf24" color="#fbbf24" />
-                  <span>{typeof activeMovie.rating === 'number' ? activeMovie.rating.toFixed(1) : (activeMovie.rating || '8.5')}</span>
+                <div
+                  style={{
+                    width: '210px',
+                    height: '315px',
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    border: '2px solid rgba(255, 255, 255, 0.18)',
+                    boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(240, 20, 47, 0.25)',
+                    background: '#121826',
+                    transform: 'perspective(1000px) rotateY(-8deg) rotateX(2deg)',
+                    transition: 'all 0.4s ease'
+                  }}
+                >
+                  <img
+                    src={activeMovie.poster}
+                    alt={activeMovie.title}
+                    referrerPolicy="no-referrer"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
                 </div>
-                <div style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#f8fafc', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700 }}>
-                  {activeMovie.certificate || 'U/A'}
-                </div>
-                {activeMovie.duration && (
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#cbd5e1', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 600 }}>
-                    <Clock size={13} />
-                    <span>{activeMovie.duration} mins</span>
-                  </div>
-                )}
-                {activeMovie.genre && activeMovie.genre.length > 0 && (
-                  <div style={{ color: '#94a3b8', fontSize: '0.82rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <span>•</span>
-                    <span>{activeMovie.genre.slice(0, 3).join(' • ')}</span>
-                  </div>
-                )}
-              </div>
-
-              <p style={{ color: '#cbd5e1', fontSize: '0.96rem', lineHeight: 1.6, marginBottom: '1.6rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                {activeMovie.description}
-              </p>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                <Link to={`/movie/${activeMovie._id}`} className="btn-primary" style={{ padding: '0.85rem 1.85rem', fontSize: '0.95rem' }}>
-                  <Ticket size={17} />
-                  Book Tickets Now
-                </Link>
-                {activeMovie.trailerUrl && (
-                  <button
-                    type="button"
-                    onClick={() => setActiveTrailerMovie(activeMovie)}
-                    className="btn-secondary"
-                    style={{
-                      padding: '0.85rem 1.6rem',
-                      fontSize: '0.95rem',
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      backdropFilter: 'blur(8px)',
-                      cursor: 'pointer',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.5rem'
-                    }}
-                  >
-                    <Play size={16} fill="white" />
-                    Watch Trailer
-                  </button>
-                )}
               </div>
             </div>
           </div>
