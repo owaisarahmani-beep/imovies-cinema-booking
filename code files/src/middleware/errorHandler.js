@@ -1,10 +1,18 @@
+const logger = require('../utils/logger');
+
 // Centralized Error Handling Middleware
 const errorHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
 
-  // Log to console for developers
-  console.error('[API Error]:', err);
+  // Log error to console & Better Stack
+  logger.error(`[API Error] ${req.method} ${req.originalUrl || req.path}: ${err.message}`, {
+    stack: err.stack,
+    method: req.method,
+    path: req.originalUrl || req.path,
+    name: err.name,
+    code: err.code
+  });
 
   // Mongoose bad ObjectId (CastError)
   if (err.name === 'CastError') {
