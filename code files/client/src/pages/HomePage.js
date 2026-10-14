@@ -151,21 +151,12 @@ const HomePage = ({ selectedCity }) => {
       {/* Cinematic Hero Spotlight Banner Carousel */}
       {activeMovie && (
         <div
+          className="hero-spotlight-section"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          style={{
-            position: 'relative',
-            minHeight: '520px',
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: '#0b0f19',
-            borderBottom: '1px solid var(--border-subtle)',
-            padding: '3.5rem 0 4rem 0',
-            overflow: 'hidden'
-          }}
         >
           {/* Stacked Smooth-Crossfading Cinema Backdrops with Subtle Ken Burns Effect */}
           {spotlightMovies.map((movie, index) => {
@@ -244,7 +235,7 @@ const HomePage = ({ selectedCity }) => {
                   <Sparkles size={14} /> SPOTLIGHT CINEMA {spotlightMovies.length > 1 ? `• ${currentSlide + 1}/${spotlightMovies.length}` : ''}
                 </div>
 
-                <h1 style={{ fontSize: '3rem', fontWeight: 900, lineHeight: 1.1, marginBottom: '0.9rem', color: '#f8fafc', letterSpacing: '-0.5px' }}>
+                <h1 className="hero-spotlight-title">
                   {activeMovie.title}
                 </h1>
 
@@ -271,11 +262,11 @@ const HomePage = ({ selectedCity }) => {
                   )}
                 </div>
 
-                <p style={{ color: '#cbd5e1', fontSize: '0.96rem', lineHeight: 1.6, marginBottom: '1.6rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                <p className="hero-spotlight-desc">
                   {activeMovie.description}
                 </p>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                <div className="hero-spotlight-actions">
                   <Link to={`/movie/${activeMovie._id}`} className="btn-primary" style={{ padding: '0.85rem 1.85rem', fontSize: '0.95rem' }}>
                     <Ticket size={17} />
                     Book Tickets Now
@@ -572,26 +563,7 @@ const HomePage = ({ selectedCity }) => {
       <button
         type="button"
         onClick={() => setIsOracleOpen(true)}
-        style={{
-          position: 'fixed',
-          bottom: '24px',
-          right: '24px',
-          zIndex: 900,
-          background: 'linear-gradient(135deg, #F0142F 0%, #990B1E 100%)',
-          color: '#ffffff',
-          border: '1px solid rgba(255, 255, 255, 0.25)',
-          borderRadius: '9999px',
-          padding: '0.75rem 1.25rem',
-          fontSize: '0.88rem',
-          fontWeight: 800,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.55rem',
-          cursor: 'pointer',
-          boxShadow: '0 10px 25px rgba(240, 20, 47, 0.45), 0 0 20px rgba(240, 20, 47, 0.3)',
-          transition: 'all 0.2s ease',
-          backdropFilter: 'blur(10px)'
-        }}
+        className="floating-oracle-btn"
         title="Open AI Cinema Oracle"
         aria-label="Open AI Cinema Oracle"
       >

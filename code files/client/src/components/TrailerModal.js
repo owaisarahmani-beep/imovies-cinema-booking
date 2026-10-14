@@ -36,67 +36,37 @@ const TrailerModal = ({ isOpen, onClose, movieTitle, trailerUrl }) => {
     : null;
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
-        backgroundColor: 'rgba(0, 0, 0, 0.88)',
-        backdropFilter: 'blur(8px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1.25rem'
-      }}
-      onClick={onClose}
-    >
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          maxWidth: '920px',
-          background: 'var(--bg-panel, #121827)',
-          borderRadius: '16px',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(240, 20, 47, 0.15)',
-          overflow: 'hidden'
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="trailer-modal-overlay" onClick={onClose}>
+      <div className="trailer-modal-container" onClick={(e) => e.stopPropagation()}>
         {/* Header Bar */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '1rem 1.5rem',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-            background: 'linear-gradient(to right, rgba(240, 20, 47, 0.1), transparent)'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        <div className="trailer-modal-header">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', minWidth: 0, flex: 1 }}>
             <span
               style={{
                 width: '10px',
                 height: '10px',
                 borderRadius: '50%',
                 background: 'var(--accent-red, #F0142F)',
-                boxShadow: '0 0 10px var(--accent-red, #F0142F)'
+                boxShadow: '0 0 10px var(--accent-red, #F0142F)',
+                flexShrink: 0
               }}
             />
             <h3
               style={{
                 margin: 0,
-                fontSize: '1.05rem',
+                fontSize: '0.98rem',
                 fontWeight: 700,
-                color: 'var(--text-main, #F8FAFC)'
+                color: 'var(--text-main, #F8FAFC)',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
               }}
             >
               {movieTitle} — Official Trailer
             </h3>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
             <a
               href={trailerUrl}
               target="_blank"
