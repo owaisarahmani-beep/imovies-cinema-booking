@@ -199,7 +199,7 @@ const HomePage = ({ selectedCity }) => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(251, 191, 36, 0.15)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.35)', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 700 }}>
                   <Star size={13} fill="#fbbf24" color="#fbbf24" />
-                  <span>{activeMovie.rating ? activeMovie.rating.toFixed(1) : '8.5'}</span>
+                  <span>{typeof activeMovie.rating === 'number' ? activeMovie.rating.toFixed(1) : (activeMovie.rating || '8.5')}</span>
                 </div>
                 <div style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#f8fafc', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700 }}>
                   {activeMovie.certificate || 'U/A'}

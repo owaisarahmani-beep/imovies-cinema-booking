@@ -427,7 +427,7 @@ const AiOracleModal = ({ isOpen, onClose, movies = [], onPlayTrailer }) => {
                         }}
                       >
                         <Star size={11} fill="#000" />
-                        <span>{movie.rating ? movie.rating.toFixed(1) : '8.5'} IMDb</span>
+                        <span>{typeof movie.rating === 'number' ? movie.rating.toFixed(1) : (movie.rating || '8.5')} IMDb</span>
                       </div>
                       <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
                         {movie.certificate || 'U/A'}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Star, Clock, Ticket } from 'lucide-react';
+import { Star, Clock, Ticket, Play } from 'lucide-react';
 
 const MovieCard = ({ movie, onPlayTrailer }) => {
   return (
@@ -30,7 +30,7 @@ const MovieCard = ({ movie, onPlayTrailer }) => {
         />
         <div className="rating-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
           <Star size={11} fill="#fbbf24" color="#fbbf24" />
-          <span>{movie.rating ? movie.rating.toFixed(1) : '8.5'}</span>
+          <span>{typeof movie.rating === 'number' ? movie.rating.toFixed(1) : (movie.rating || '8.5')}</span>
           <span style={{ fontSize: '0.62rem', fontWeight: 800, background: '#f5c518', color: '#000', padding: '1px 3px', borderRadius: '2px', marginLeft: '2px' }}>IMDb</span>
         </div>
         <div className="cert-pill">{movie.certificate || 'U/A'}</div>

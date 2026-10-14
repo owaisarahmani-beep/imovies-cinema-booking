@@ -127,7 +127,7 @@ const MovieDetailsPage = ({ selectedCity }) => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '1.2rem', color: '#cbd5e1', fontSize: '0.9rem', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#fbbf24', fontWeight: 700 }}>
                   <Star size={16} fill="#fbbf24" />
-                  <span>{movie.rating ? movie.rating.toFixed(1) : '8.5'}/10</span>
+                  <span>{typeof movie.rating === 'number' ? movie.rating.toFixed(1) : (movie.rating || '8.5')}/10</span>
                   <span style={{ fontSize: '0.65rem', fontWeight: 800, background: '#f5c518', color: '#000', padding: '1px 4px', borderRadius: '3px', marginLeft: '2px' }}>IMDb</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
