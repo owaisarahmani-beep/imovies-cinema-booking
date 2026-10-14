@@ -22,6 +22,7 @@ const HomePage = ({ selectedCity }) => {
 
   // Hero Spotlight Carousel State
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const [touchStartX, setTouchStartX] = useState(null);
   const [touchEndX, setTouchEndX] = useState(null);
 
@@ -45,16 +46,27 @@ const HomePage = ({ selectedCity }) => {
     : (movies.length > 0 ? movies.slice(0, 6) : (featuredMovie ? [featuredMovie] : []));
   const activeMovie = spotlightMovies[currentSlide] || featuredMovie || movies[0];
 
-  // Auto-play timer for hero carousel: smoothly cycles every 4.5 seconds
+  // Preload backdrop images to ensure instantaneous zero-flicker crossfading
   useEffect(() => {
-    if (spotlightMovies.length <= 1) return;
+    spotlightMovies.forEach((m) => {
+      const url = m.banner || m.poster;
+      if (url) {
+        const img = new Image();
+        img.src = url;
+      }
+    });
+  }, [spotlightMovies]);
+
+  // Auto-play timer for hero carousel: smoothly cycles every 5.5 seconds (paused on hover)
+  useEffect(() => {
+    if (spotlightMovies.length <= 1 || isPaused) return;
 
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % spotlightMovies.length);
-    }, 4500);
+    }, 5500);
 
     return () => clearInterval(timer);
-  }, [spotlightMovies.length, currentSlide]);
+  }, [spotlightMovies.length, currentSlide, isPaused]);
 
   const nextSlide = () => {
     if (spotlightMovies.length <= 1) return;
@@ -139,6 +151,8 @@ const HomePage = ({ selectedCity }) => {
       {/* Cinematic Hero Spotlight Banner Carousel */}
       {activeMovie && (
         <div
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -147,15 +161,38 @@ const HomePage = ({ selectedCity }) => {
             minHeight: '520px',
             display: 'flex',
             alignItems: 'center',
-            backgroundImage: `linear-gradient(90deg, rgba(11, 15, 25, 0.96) 0%, rgba(11, 15, 25, 0.85) 38%, rgba(11, 15, 25, 0.25) 75%, rgba(11, 15, 25, 0.65) 100%), linear-gradient(0deg, #0b0f19 0%, transparent 40%), url(${activeMovie.banner || activeMovie.poster})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center top',
+            backgroundColor: '#0b0f19',
             borderBottom: '1px solid var(--border-subtle)',
             padding: '3.5rem 0 4rem 0',
-            transition: 'background-image 0.6s ease-in-out',
             overflow: 'hidden'
           }}
         >
+          {/* Stacked Smooth-Crossfading Cinema Backdrops with Subtle Ken Burns Effect */}
+          {spotlightMovies.map((movie, index) => {
+            const isCurrent = index === currentSlide;
+            return (
+              <div
+                key={`backdrop-${movie._id || index}`}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundImage: `linear-gradient(90deg, rgba(11, 15, 25, 0.97) 0%, rgba(11, 15, 25, 0.88) 38%, rgba(11, 15, 25, 0.3) 75%, rgba(11, 15, 25, 0.75) 100%), linear-gradient(0deg, #0b0f19 0%, transparent 40%), url(${movie.banner || movie.poster})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center top',
+                  opacity: isCurrent ? 1 : 0,
+                  transform: isCurrent ? 'scale(1)' : 'scale(1.05)',
+                  transition: 'opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  pointerEvents: 'none',
+                  zIndex: isCurrent ? 1 : 0,
+                  willChange: 'opacity, transform'
+                }}
+              />
+            );
+          })}
+
           {/* Previous / Next Arrow Controls */}
           {spotlightMovies.length > 1 && (
             <>
@@ -164,6 +201,7 @@ const HomePage = ({ selectedCity }) => {
                 onClick={prevSlide}
                 className="hero-nav-btn prev"
                 aria-label="Previous movie"
+                style={{ zIndex: 10 }}
               >
                 <ChevronLeft size={24} />
               </button>
@@ -172,6 +210,7 @@ const HomePage = ({ selectedCity }) => {
                 onClick={nextSlide}
                 className="hero-nav-btn next"
                 aria-label="Next movie"
+                style={{ zIndex: 10 }}
               >
                 <ChevronRight size={24} />
               </button>
@@ -180,7 +219,12 @@ const HomePage = ({ selectedCity }) => {
 
           <div className="container" style={{ width: '100%', position: 'relative', zIndex: 2 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '3rem' }}>
-              <div style={{ maxWidth: '640px', flex: '1 1 auto' }}>
+              {/* Left Side: Animated Movie Information */}
+              <div
+                key={`info-${activeMovie._id || currentSlide}`}
+                className="spotlight-content-fade"
+                style={{ maxWidth: '640px', flex: '1 1 auto' }}
+              >
                 <div
                   style={{
                     display: 'inline-flex',
@@ -262,7 +306,8 @@ const HomePage = ({ selectedCity }) => {
 
               {/* Right Side: Floating Glassmorphic 3D Movie Poster Card (Desktop) */}
               <div
-                className="spotlight-poster-card"
+                key={`card-${activeMovie._id || currentSlide}`}
+                className="spotlight-poster-card spotlight-poster-fade"
                 style={{
                   flexShrink: 0,
                   position: 'relative'
@@ -294,7 +339,7 @@ const HomePage = ({ selectedCity }) => {
 
           {/* Dots Indicator for Carousel */}
           {spotlightMovies.length > 1 && (
-            <div className="hero-dots-container">
+            <div className="hero-dots-container" style={{ zIndex: 10 }}>
               {spotlightMovies.map((m, idx) => (
                 <button
                   key={m._id || idx}
@@ -308,7 +353,7 @@ const HomePage = ({ selectedCity }) => {
           )}
 
           {/* Subtle bottom gradient fade to body */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '80px', background: 'linear-gradient(to top, var(--bg-main) 0%, transparent 100%)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '80px', background: 'linear-gradient(to top, var(--bg-main) 0%, transparent 100%)', pointerEvents: 'none', zIndex: 3 }} />
         </div>
       )}
 

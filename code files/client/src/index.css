@@ -434,21 +434,22 @@ textarea:focus-visible {
   height: 6px;
   border-radius: 9999px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   border: none;
   padding: 0;
 }
 .hero-dot.active {
-  width: 24px;
+  width: 28px;
   background: var(--accent-red);
-  box-shadow: 0 0 10px rgba(240, 20, 47, 0.6);
+  box-shadow: 0 0 12px rgba(240, 20, 47, 0.7);
 }
 .hero-dot.inactive {
-  width: 7px;
+  width: 8px;
   background: rgba(255, 255, 255, 0.3);
 }
 .hero-dot.inactive:hover {
-  background: rgba(255, 255, 255, 0.65);
+  width: 14px;
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .spotlight-poster-card {
@@ -458,6 +459,39 @@ textarea:focus-visible {
   .spotlight-poster-card {
     display: flex !important;
   }
+}
+
+/* Smooth Hero Spotlight Crossfade Animations */
+@keyframes spotlightContentFade {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.spotlight-content-fade {
+  animation: spotlightContentFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform;
+}
+
+@keyframes spotlightPosterFade {
+  0% {
+    opacity: 0;
+    transform: perspective(1000px) rotateY(-8deg) rotateX(2deg) translateY(20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1000px) rotateY(-8deg) rotateX(2deg) translateY(0) scale(1);
+  }
+}
+
+.spotlight-poster-fade {
+  animation: spotlightPosterFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform;
 }
 
 /* Cinema Interactive Screen Layout */
