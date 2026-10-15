@@ -4,7 +4,7 @@ import api from '../services/api';
 import TrailerModal from '../components/TrailerModal';
 import { Star, Clock, Calendar, MapPin, Play, UserCheck, Shield } from 'lucide-react';
 
-const MovieDetailsPage = ({ selectedCity }) => {
+const MovieDetailsPage = ({ selectedCity, setSelectedCity }) => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [theatres, setTheatres] = useState([]);
@@ -12,16 +12,23 @@ const MovieDetailsPage = ({ selectedCity }) => {
   const [loading, setLoading] = useState(true);
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
 
-  // Generate 4 consecutive dates for the date picker
-  const dateOptions = [0, 1, 2, 3].map((offset) => {
+  // Generate 5 consecutive dates for the date picker using LOCAL calendar components
+  const dateOptions = [0, 1, 2, 3, 4].map((offset) => {
     const d = new Date();
     d.setDate(d.getDate() + offset);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const dayNum = String(d.getDate()).padStart(2, '0');
+    let dayLabel = d.toLocaleDateString('en-US', { weekday: 'short' });
+    if (offset === 0) dayLabel = 'Today';
+    else if (offset === 1) dayLabel = 'Tomorrow';
+
     return {
       offset,
-      day: d.toLocaleDateString('en-US', { weekday: 'short' }),
+      day: dayLabel,
       dateNumber: d.getDate(),
       month: d.toLocaleDateString('en-US', { month: 'short' }),
-      isoString: d.toISOString().split('T')[0]
+      isoString: `${year}-${month}-${dayNum}`
     };
   });
 
@@ -241,8 +248,26 @@ const MovieDetailsPage = ({ selectedCity }) => {
                 No shows scheduled for the selected date {selectedCity !== 'All' ? `in ${selectedCity}` : ''}.
               </p>
               <p style={{ color: '#64748b', fontSize: '0.82rem', marginTop: '0.5rem' }}>
-                Please select another date above or switch cities in the navbar.
+                Please select another date above or switch to all cities.
               </p>
+              {selectedCity !== 'All' && setSelectedCity && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedCity('All')}
+                  className="btn-primary"
+                  style={{
+                    marginTop: '1.25rem',
+                    padding: '0.65rem 1.4rem',
+                    fontSize: '0.88rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <MapPin size={15} /> Show Theatres in All Cities
+                </button>
+              )}
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>

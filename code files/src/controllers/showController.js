@@ -50,21 +50,36 @@ exports.getShowsByMovie = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Movie not found' });
     }
 
-    // Filter by date range (start of day to end of day)
+    // Timezone-resilient date matching (supports both UTC and IST midnight ranges)
     let dateFilter = {};
+    let targetDate = new Date();
+
     if (date) {
-      const selectedDate = new Date(date);
-      const startOfDay = new Date(selectedDate.setHours(0, 0, 0, 0));
-      const endOfDay = new Date(selectedDate.setHours(23, 59, 59, 999));
-      dateFilter = { showDate: { $gte: startOfDay, $lte: endOfDay } };
+      const parts = date.split('-').map(Number);
+      if (parts.length === 3) {
+        const [y, m, d] = parts;
+        const utcStart = new Date(Date.UTC(y, m - 1, d, 0, 0, 0));
+        const utcEnd = new Date(Date.UTC(y, m - 1, d, 23, 59, 59, 999));
+        // IST is UTC+5:30 (starts 5h30m earlier at previous day 18:30 UTC)
+        const istStart = new Date(utcStart.getTime() - (5 * 60 + 30) * 60 * 1000);
+        const istEnd = new Date(utcEnd.getTime() - (5 * 60 + 30) * 60 * 1000);
+
+        dateFilter = {
+          $or: [
+            { showDate: { $gte: istStart, $lte: istEnd } },
+            { showDate: { $gte: utcStart, $lte: utcEnd } }
+          ]
+        };
+        targetDate = utcStart;
+      }
     } else {
-      // Default: today onwards
       const startOfToday = new Date();
       startOfToday.setHours(0, 0, 0, 0);
       dateFilter = { showDate: { $gte: startOfToday } };
+      targetDate.setHours(0, 0, 0, 0);
     }
 
-    const shows = await Show.find({
+    let shows = await Show.find({
       movie: movieId,
       isActive: true,
       ...dateFilter
@@ -78,6 +93,63 @@ exports.getShowsByMovie = async (req, res, next) => {
       filteredShows = shows.filter(
         (show) => show.theatre && show.theatre.city.toLowerCase() === city.toLowerCase()
       );
+    }
+
+    // Dynamic Showtime Auto-Provisioning:
+    // If no shows are found for this movie on the requested date or city, auto-schedule fresh showtimes
+    if (filteredShows.length === 0) {
+      const theatreQuery = (city && city !== 'All')
+        ? { city: new RegExp(`^${city}$`, 'i') }
+        : {};
+
+      let targetTheatres = await Theatre.find(theatreQuery);
+
+      // If no theatres found for the specific query, fallback to all available theatres
+      if (targetTheatres.length === 0) {
+        targetTheatres = await Theatre.find({});
+      }
+
+      if (targetTheatres.length > 0) {
+        const defaultShowTimes = ['10:30 AM', '02:15 PM', '06:45 PM', '10:00 PM'];
+        const newlyProvisionedShows = [];
+
+        for (const theatre of targetTheatres) {
+          // Provide 4 shows in major metro theatres, 2 in others
+          const isMetro = ['mumbai', 'delhi', 'bengaluru'].includes(theatre.city.toLowerCase());
+          const timesToProvision = isMetro ? defaultShowTimes : ['02:15 PM', '06:45 PM'];
+
+          for (const time of timesToProvision) {
+            const screen = (theatre.screens && theatre.screens.length > 0)
+              ? theatre.screens[0]
+              : { screenName: 'Screen 1' };
+
+            const format = screen.screenName.includes('IMAX')
+              ? 'IMAX 3D'
+              : (screen.screenName.includes('4DX') ? '4DX' : '2D');
+
+            const pricing = { vip: 350, premium: 250, standard: 180 };
+
+            const newShow = await Show.create({
+              movie: movieId,
+              theatre: theatre._id,
+              screenName: screen.screenName,
+              showDate: targetDate,
+              showTime: time,
+              format,
+              pricing,
+              totalSeats: 80,
+              availableSeatsCount: 80,
+              isActive: true
+            });
+
+            await generateSeatsForShow(newShow._id, pricing);
+            newShow.theatre = theatre;
+            newlyProvisionedShows.push(newShow);
+          }
+        }
+
+        filteredShows = newlyProvisionedShows;
+      }
     }
 
     // Group shows by Theatre for a BookMyShow style display

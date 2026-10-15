@@ -38,7 +38,7 @@ function App() {
       <main style={{ flexGrow: 1 }}>
         <Routes>
           <Route path="/" element={<HomePage selectedCity={selectedCity} />} />
-          <Route path="/movie/:id" element={<MovieDetailsPage selectedCity={selectedCity} />} />
+          <Route path="/movie/:id" element={<MovieDetailsPage selectedCity={selectedCity} setSelectedCity={setSelectedCity} />} />
           <Route path="/book/:showId" element={<SeatBookingPage />} />
           <Route path="/confirmation/:id" element={<BookingConfirmationPage />} />
           <Route
