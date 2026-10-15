@@ -127,7 +127,7 @@ const MovieDetailsPage = ({ selectedCity, setSelectedCity }) => {
                 <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>{movie.language?.join(', ')}</span>
               </div>
 
-              <h1 style={{ fontSize: '2.6rem', fontWeight: 900, marginBottom: '0.6rem', color: '#f8fafc' }}>
+              <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.6rem)', fontWeight: 900, marginBottom: '0.6rem', color: '#f8fafc', wordBreak: 'break-word' }}>
                 {movie.title}
               </h1>
 
@@ -196,7 +196,7 @@ const MovieDetailsPage = ({ selectedCity, setSelectedCity }) => {
         {/* Date Selector Pills */}
         <div style={{ marginBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '1rem' }}>Select Date</h2>
-          <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem', width: '100%', maxWidth: '100%', WebkitOverflowScrolling: 'touch' }}>
             {dateOptions.map((item) => {
               const isSelected = selectedDate === item.offset;
               return (

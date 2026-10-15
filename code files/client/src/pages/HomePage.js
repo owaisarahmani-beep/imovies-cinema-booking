@@ -351,21 +351,7 @@ const HomePage = ({ selectedCity }) => {
       {/* Main Movie Discovery Container */}
       <div className="container" style={{ marginTop: '2.5rem' }}>
         {/* Search & Filter Toolbar */}
-        <div
-          style={{
-            background: 'rgba(18, 24, 39, 0.85)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: '16px',
-            padding: '1.4rem 1.6rem',
-            marginBottom: '2.5rem',
-            boxShadow: '0 12px 36px rgba(0, 0, 0, 0.35)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.1rem'
-          }}
-        >
+        <div className="home-filter-toolbar">
           {/* Active Filters Bar */}
           {hasActiveFilters && (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -471,13 +457,13 @@ const HomePage = ({ selectedCity }) => {
         </div>
 
         {/* Section Heading */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '0.75rem' }}>
-          <div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '0.75rem', minWidth: 0, width: '100%' }}>
+          <div style={{ minWidth: 0, flex: '1 1 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.3rem' }}>
-              <div style={{ width: '4px', height: '22px', background: 'var(--accent-red)', borderRadius: '2px' }} />
-              <h2 style={{ fontSize: '1.65rem', fontWeight: 800, letterSpacing: '-0.3px', margin: 0 }}>Now Showing in Cinemas</h2>
+              <div style={{ width: '4px', height: '22px', background: 'var(--accent-red)', borderRadius: '2px', flexShrink: 0 }} />
+              <h2 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.65rem)', fontWeight: 800, letterSpacing: '-0.3px', margin: 0, wordBreak: 'break-word' }}>Now Showing in Cinemas</h2>
             </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', margin: 0, paddingLeft: '0.85rem' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0, paddingLeft: '0.85rem' }}>
               {selectedCity !== 'All' ? `Featuring premiere screens across ${selectedCity}` : 'Explore blockbuster releases near you'}
             </p>
           </div>
