@@ -571,7 +571,6 @@ const HomePage = ({ selectedCity }) => {
         onClose={() => setIsOracleOpen(false)}
         movies={movies}
         onPlayTrailer={(m) => {
-          setIsOracleOpen(false);
           setActiveTrailerMovie(m);
         }}
       />

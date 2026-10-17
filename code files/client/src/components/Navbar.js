@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { safeStorage } from '../utils/safeStorage';
@@ -52,6 +52,7 @@ const findClosestCity = (lat, lon) => {
 const Navbar = ({ selectedCity, setSelectedCity }) => {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [cities, setCities] = useState([
     'Mumbai', 'Delhi', 'Bengaluru', 'Kolkata', 'Hyderabad', 'Chennai', 'Pune', 'Ahmedabad', 'Jaipur',
@@ -466,7 +467,12 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
               )}
             </div>
           ) : (
-            <Link to="/login" className="btn-primary" style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}>
+            <Link
+              to="/login"
+              state={{ from: location.pathname + location.search }}
+              className="btn-primary"
+              style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}
+            >
               Sign In
             </Link>
           )}
@@ -623,6 +629,7 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
           ) : (
             <Link
               to="/login"
+              state={{ from: location.pathname + location.search }}
               onClick={() => setIsMobileMenuOpen(false)}
               className="btn-primary"
               style={{ width: '100%', textAlign: 'center', marginTop: '0.5rem' }}

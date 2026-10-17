@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, Lock, Phone } from 'lucide-react';
+import { User, Mail, Lock, Phone, Ticket } from 'lucide-react';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +14,18 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirectAfterRegister = (userRole) => {
+    const from = location.state?.from;
+    if (from) {
+      navigate(from, { state: location.state, replace: true });
+    } else if (userRole === 'admin') {
+      navigate('/admin', { replace: true });
+    } else {
+      navigate('/', { replace: true });
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,9 +40,9 @@ const RegisterPage = () => {
 
     setLoading(true);
     try {
-      await register(formData);
+      const data = await register(formData);
       toast.success('Account created successfully!');
-      navigate('/');
+      redirectAfterRegister(data?.user?.role);
     } catch (err) {
       const msg = err.response?.data?.message || 'Registration failed.';
       toast.error(msg);
@@ -59,6 +71,26 @@ const RegisterPage = () => {
           </div>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '0.6rem' }}>Create Your Cinema Profile</h2>
           <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Reserve movie tickets with real-time seat tracking</p>
+          {location.state?.from && (
+            <div
+              style={{
+                marginTop: '0.75rem',
+                background: 'rgba(245, 158, 11, 0.15)',
+                border: '1px solid rgba(245, 158, 11, 0.3)',
+                borderRadius: '8px',
+                padding: '0.5rem 0.75rem',
+                fontSize: '0.78rem',
+                color: '#fbbf24',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                textAlign: 'left'
+              }}
+            >
+              <Ticket size={15} flexShrink={0} />
+              <span>You will be returned immediately to your cinema booking with your selected seats intact!</span>
+            </div>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -182,7 +214,7 @@ const RegisterPage = () => {
 
         <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.85rem', color: '#94a3b8' }}>
           Already have an account?{' '}
-          <Link to="/login" style={{ color: '#e50914', fontWeight: 600 }}>
+          <Link to="/login" state={location.state} style={{ color: '#e50914', fontWeight: 600 }}>
             Sign In
           </Link>
         </p>

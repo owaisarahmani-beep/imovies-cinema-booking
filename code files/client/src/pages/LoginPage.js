@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
-import { Film, Lock, Mail, User, ShieldCheck } from 'lucide-react';
+import { Film, Lock, Mail, User, ShieldCheck, Ticket } from 'lucide-react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -10,6 +10,18 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirectAfterLogin = (userRole) => {
+    const from = location.state?.from;
+    if (from) {
+      navigate(from, { state: location.state, replace: true });
+    } else if (userRole === 'admin') {
+      navigate('/admin', { replace: true });
+    } else {
+      navigate('/', { replace: true });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,11 +34,7 @@ const LoginPage = () => {
     try {
       const data = await login(email, password);
       toast.success(`Welcome back, ${data.user.name}!`);
-      if (data.user.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
+      redirectAfterLogin(data.user.role);
     } catch (err) {
       const msg = err.response?.data?.message || 'Invalid email or password.';
       toast.error(msg);
@@ -42,11 +50,7 @@ const LoginPage = () => {
     try {
       const data = await login(demoEmail, demoPassword);
       toast.success(`Logged in as ${data.user.role === 'admin' ? 'Administrator' : 'Customer'}!`);
-      if (data.user.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
+      redirectAfterLogin(data.user.role);
     } catch (err) {
       toast.error('Quick login failed. Make sure DB is seeded (npm run seed).');
     } finally {
@@ -74,6 +78,26 @@ const LoginPage = () => {
           </div>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '0.6rem' }}>Sign In to Your Account</h2>
           <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Access your movie tickets and personalized bookings</p>
+          {location.state?.from && (
+            <div
+              style={{
+                marginTop: '0.75rem',
+                background: 'rgba(245, 158, 11, 0.15)',
+                border: '1px solid rgba(245, 158, 11, 0.3)',
+                borderRadius: '8px',
+                padding: '0.5rem 0.75rem',
+                fontSize: '0.78rem',
+                color: '#fbbf24',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                textAlign: 'left'
+              }}
+            >
+              <Ticket size={15} flexShrink={0} />
+              <span>You will be returned immediately to your cinema booking with your selected seats intact!</span>
+            </div>
+          )}
         </div>
 
         {/* Quick Demo Credentials for Mentors/Evaluators */}
@@ -173,7 +197,7 @@ const LoginPage = () => {
 
         <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.85rem', color: '#94a3b8' }}>
           Don't have an account?{' '}
-          <Link to="/register" style={{ color: '#e50914', fontWeight: 600 }}>
+          <Link to="/register" state={location.state} style={{ color: '#e50914', fontWeight: 600 }}>
             Create Account
           </Link>
         </p>

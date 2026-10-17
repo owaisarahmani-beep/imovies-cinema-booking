@@ -10,18 +10,20 @@ const extractYouTubeId = (url) => {
 
 const TrailerModal = ({ isOpen, onClose, movieTitle, trailerUrl }) => {
   useEffect(() => {
+    if (!isOpen) return;
+
+    const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
     };
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
       window.removeEventListener('keydown', handleKeyDown);
+      window.scrollTo({ top: scrollY, behavior: 'instant' });
     };
   }, [isOpen, onClose]);
 
