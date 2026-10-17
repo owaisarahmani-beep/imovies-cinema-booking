@@ -115,7 +115,7 @@ exports.getShowsByMovie = async (req, res, next) => {
 
         for (const theatre of targetTheatres) {
           // Provide 4 shows in major metro theatres, 2 in others
-          const isMetro = ['mumbai', 'delhi', 'bengaluru'].includes(theatre.city.toLowerCase());
+          const isMetro = ['mumbai', 'delhi', 'bengaluru', 'patna', 'gaya', 'kolkata', 'hyderabad', 'lucknow'].includes(theatre.city.toLowerCase());
           const timesToProvision = isMetro ? defaultShowTimes : ['02:15 PM', '06:45 PM'];
 
           for (const time of timesToProvision) {

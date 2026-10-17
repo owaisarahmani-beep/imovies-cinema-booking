@@ -418,7 +418,7 @@ const AdminDashboard = () => {
               />
               <input
                 type="text"
-                placeholder="City (e.g. Mumbai, Delhi, Bengaluru, Chennai)"
+                placeholder="City (e.g. Patna, Gaya, Mumbai, Delhi, Bengaluru)"
                 value={newTheatre.city}
                 onChange={(e) => setNewTheatre({ ...newTheatre, city: e.target.value })}
                 required

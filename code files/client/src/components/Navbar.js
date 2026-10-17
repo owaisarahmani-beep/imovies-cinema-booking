@@ -14,7 +14,14 @@ const CITY_COORDINATES = {
   'Kolkata': { lat: 22.5726, lon: 88.3639 },
   'Pune': { lat: 18.5204, lon: 73.8567 },
   'Ahmedabad': { lat: 23.0225, lon: 72.5714 },
-  'Jaipur': { lat: 26.9124, lon: 75.7873 }
+  'Jaipur': { lat: 26.9124, lon: 75.7873 },
+  'Patna': { lat: 25.5941, lon: 85.1376 },
+  'Gaya': { lat: 24.7955, lon: 85.0002 },
+  'Muzaffarpur': { lat: 26.1209, lon: 85.3647 },
+  'Bhagalpur': { lat: 25.2425, lon: 86.9842 },
+  'Ranchi': { lat: 23.3441, lon: 85.3096 },
+  'Lucknow': { lat: 26.8467, lon: 80.9462 },
+  'Varanasi': { lat: 25.3176, lon: 82.9739 }
 };
 
 const getDistanceKm = (lat1, lon1, lat2, lon2) => {
@@ -47,7 +54,8 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
   const navigate = useNavigate();
 
   const [cities, setCities] = useState([
-    'Mumbai', 'Delhi', 'Bengaluru', 'Kolkata', 'Hyderabad', 'Chennai', 'Pune', 'Ahmedabad', 'Jaipur'
+    'Mumbai', 'Delhi', 'Bengaluru', 'Kolkata', 'Hyderabad', 'Chennai', 'Pune', 'Ahmedabad', 'Jaipur',
+    'Patna', 'Gaya', 'Muzaffarpur', 'Bhagalpur', 'Ranchi', 'Lucknow', 'Varanasi'
   ]);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);

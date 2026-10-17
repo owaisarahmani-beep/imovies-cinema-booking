@@ -462,6 +462,115 @@ const theatresData = [
       { screenName: 'Main Heritage Hall', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 }
     ],
     facilities: ['Heritage Architecture', 'Dolby 7.1', 'Royal Seating']
+  },
+  // Patna
+  {
+    name: 'Cinépolis: P&M Mall',
+    city: 'Patna',
+    location: 'P&M Mall, Patliputra Kurji Road, Patliputra Colony',
+    totalScreens: 3,
+    screens: [
+      { screenName: 'Screen 1 - 3D Dolby', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 },
+      { screenName: 'Screen 2 - VIP Recliner', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 }
+    ],
+    facilities: ['Dolby 7.1', '3D Projection', 'Food Court', 'Recliner Seats']
+  },
+  {
+    name: 'Regent Cinema: Heritage Hall',
+    city: 'Patna',
+    location: 'East Gandhi Maidan, Near Mona Cinema, Patna Central',
+    totalScreens: 2,
+    screens: [
+      { screenName: 'Screen 1 - 4K Laser', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 }
+    ],
+    facilities: ['Dolby Atmos', '4K Laser Projection', 'Heritage Lounge', 'Snack Bar']
+  },
+  {
+    name: 'PVR: City Centre Mall',
+    city: 'Patna',
+    location: 'City Centre Mall, Christian Quarters, Lodipur, Patna',
+    totalScreens: 4,
+    screens: [
+      { screenName: 'IMAX Laser 1', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 }
+    ],
+    facilities: ['IMAX Laser', 'Dolby Atmos', 'Gourmet Popcorn', 'Valet Parking']
+  },
+  // Gaya
+  {
+    name: 'Carnival Cinemas: Gaya Central',
+    city: 'Gaya',
+    location: 'Gaya Central Mall, Rai Kashinath More, Station Road',
+    totalScreens: 2,
+    screens: [
+      { screenName: 'Screen 1 - Dolby Digital', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 },
+      { screenName: 'Screen 2 - Sound Master', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 }
+    ],
+    facilities: ['Dolby 7.1', 'Air Conditioned', 'Cafeteria', 'Pushback Seats']
+  },
+  {
+    name: 'City Pride Multiplex',
+    city: 'Gaya',
+    location: 'Swarajpuri Road, Near Tower Chowk, Gaya',
+    totalScreens: 2,
+    screens: [
+      { screenName: 'Screen 1 - 2K Laser', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 }
+    ],
+    facilities: ['Dolby Sound', 'Digital 2K', 'Snack Bar']
+  },
+  // Muzaffarpur
+  {
+    name: 'Cinekrishna Multiplex: DRB Mall',
+    city: 'Muzaffarpur',
+    location: 'DRB Mall, Akharaghat Road, Muzaffarpur',
+    totalScreens: 2,
+    screens: [
+      { screenName: 'Screen 1 - Atmos', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 }
+    ],
+    facilities: ['Dolby Atmos', '4K Projection', 'Food Court']
+  },
+  // Bhagalpur
+  {
+    name: 'Deepraj Cinema: City Center',
+    city: 'Bhagalpur',
+    location: 'Station Road, Near Sujaganj, Bhagalpur',
+    totalScreens: 1,
+    screens: [
+      { screenName: 'Screen 1 - Digital 2D', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 }
+    ],
+    facilities: ['Dolby 7.1', 'Comfortable Seating', 'Snack Counter']
+  },
+  // Ranchi
+  {
+    name: 'PVR: Nucleus Mall',
+    city: 'Ranchi',
+    location: 'Circular Road, Lalpur, Ranchi',
+    totalScreens: 4,
+    screens: [
+      { screenName: 'Screen 1 - 4K Laser', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 }
+    ],
+    facilities: ['Dolby Atmos', 'Laser 4K', 'Recliners']
+  },
+  // Lucknow
+  {
+    name: 'PVR Superplex: Phoenix Palassio',
+    city: 'Lucknow',
+    location: 'Sector 7, Amar Shaheed Path, Gomti Nagar Extension',
+    totalScreens: 5,
+    screens: [
+      { screenName: 'IMAX Laser 1', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 }
+    ],
+    facilities: ['IMAX Laser', 'Dolby Atmos', 'Luxe Dining']
+  },
+  // Varanasi
+  {
+    name: 'JHV Cinemas: Mall Road',
+    city: 'Varanasi',
+    location: 'Cantonment, Mall Road, Varanasi',
+    totalScreens: 3,
+    screens: [
+      { screenName: 'Screen 1 - Dolby 7.1', totalRows: 8, seatsPerRow: 10, seatCapacity: 80 }
+    ],
+    facilities: ['Dolby 7.1', 'Food Lounge', 'Central Parking']
   }
 ];
 
