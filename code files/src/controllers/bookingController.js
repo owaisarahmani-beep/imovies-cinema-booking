@@ -153,7 +153,7 @@ exports.releaseSeats = async (req, res, next) => {
 // @access  Private
 exports.createBooking = async (req, res, next) => {
   try {
-    const { showId, seatNumbers, paymentMethod, cardDetails } = req.body;
+    const { showId, seatNumbers, paymentMethod, cardDetails, snacks } = req.body;
 
     if (!showId || !seatNumbers || !seatNumbers.length) {
       return res.status(400).json({
@@ -168,8 +168,23 @@ exports.createBooking = async (req, res, next) => {
     }
 
     // Verify seats
-    const { seats, baseAmount, convenienceFee, taxes, grandTotal } =
+    const { seats, baseAmount, convenienceFee, taxes } =
       await calculateSeatTotal(showId, seatNumbers);
+
+    // Calculate food and beverage snacks total
+    const validSnacks = Array.isArray(snacks)
+      ? snacks
+          .filter((s) => s && s.count > 0)
+          .map((s) => ({
+            id: s.id,
+            name: s.name,
+            price: Number(s.price) || 0,
+            count: Number(s.count) || 1,
+            emoji: s.emoji || '🍿'
+          }))
+      : [];
+    const snacksTotal = validSnacks.reduce((sum, s) => sum + s.price * s.count, 0);
+    const grandTotal = baseAmount + convenienceFee + taxes + snacksTotal;
 
     const now = new Date();
     // Verify none are already booked or locked by someone else
@@ -210,6 +225,8 @@ exports.createBooking = async (req, res, next) => {
       baseAmount,
       convenienceFee,
       taxes,
+      snacks: validSnacks,
+      snacksTotal,
       grandTotal,
       bookingStatus: 'confirmed',
       paymentStatus: 'paid',

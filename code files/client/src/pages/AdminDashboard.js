@@ -578,6 +578,7 @@ const AdminDashboard = () => {
                 <th style={{ padding: '0.8rem 0.5rem' }}>User</th>
                 <th style={{ padding: '0.8rem 0.5rem' }}>Movie</th>
                 <th style={{ padding: '0.8rem 0.5rem' }}>Seats</th>
+                <th style={{ padding: '0.8rem 0.5rem' }}>Snacks &amp; F&amp;B</th>
                 <th style={{ padding: '0.8rem 0.5rem' }}>Total</th>
                 <th style={{ padding: '0.8rem 0.5rem' }}>Status</th>
               </tr>
@@ -589,6 +590,34 @@ const AdminDashboard = () => {
                   <td style={{ padding: '0.8rem 0.5rem' }}>{b.user?.name || 'Customer'}</td>
                   <td style={{ padding: '0.8rem 0.5rem', fontWeight: 600, color: '#f8fafc' }}>{b.movie?.title}</td>
                   <td style={{ padding: '0.8rem 0.5rem', color: '#fbbf24' }}>{b.seats?.join(', ')}</td>
+                  <td style={{ padding: '0.8rem 0.5rem' }}>
+                    {b.snacks && b.snacks.length > 0 ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                        {b.snacks.map((s, idx) => (
+                          <span
+                            key={idx}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.3rem',
+                              background: 'rgba(251, 191, 36, 0.12)',
+                              color: '#fbbf24',
+                              border: '1px solid rgba(251, 191, 36, 0.3)',
+                              borderRadius: '4px',
+                              padding: '0.15rem 0.45rem',
+                              fontSize: '0.75rem',
+                              fontWeight: 600,
+                              whiteSpace: 'nowrap'
+                            }}
+                          >
+                            {s.emoji || '🍿'} {s.name} ×{s.count}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span style={{ color: '#64748b', fontSize: '0.75rem' }}>—</span>
+                    )}
+                  </td>
                   <td style={{ padding: '0.8rem 0.5rem', fontWeight: 700 }}>₹{b.grandTotal}</td>
                   <td style={{ padding: '0.8rem 0.5rem' }}>
                     <span

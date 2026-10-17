@@ -51,6 +51,19 @@ const bookingSchema = new mongoose.Schema(
       type: Number,
       default: 20
     },
+    snacks: [
+      {
+        id: String,
+        name: String,
+        price: Number,
+        count: Number,
+        emoji: String
+      }
+    ],
+    snacksTotal: {
+      type: Number,
+      default: 0
+    },
     grandTotal: {
       type: Number,
       required: true

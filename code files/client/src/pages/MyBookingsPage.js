@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../services/api';
-import { Ticket, Calendar, Clock, MapPin, AlertTriangle, XCircle, CheckCircle } from 'lucide-react';
+import { Ticket, Calendar, Clock, MapPin, AlertTriangle, XCircle, CheckCircle, X } from 'lucide-react';
+import DigitalTicket from '../components/DigitalTicket';
 
 const MyBookingsPage = () => {
   const [bookings, setBookings] = useState([]);
@@ -11,6 +12,7 @@ const MyBookingsPage = () => {
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [selectedBookingForCancel, setSelectedBookingForCancel] = useState(null);
   const [cancelReason, setCancelReason] = useState('Personal schedule conflict');
+  const [viewingTicket, setViewingTicket] = useState(null);
 
   const fetchBookings = async () => {
     try {
@@ -156,6 +158,32 @@ const MyBookingsPage = () => {
                         <Clock size={13} /> {booking.show?.showTime}
                       </span>
                     </div>
+
+                    {booking.snacks && booking.snacks.length > 0 && (
+                      <div style={{ marginTop: '0.5rem', display: 'flex', flexWrap: 'wrap', gap: '0.35rem', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.73rem', color: '#94a3b8', fontWeight: 600 }}>🍿 F&B Snacks:</span>
+                        {booking.snacks.map((snk, idx) => (
+                          <span
+                            key={idx}
+                            style={{
+                              fontSize: '0.72rem',
+                              padding: '0.15rem 0.5rem',
+                              borderRadius: '999px',
+                              background: 'rgba(245, 158, 11, 0.15)',
+                              color: '#fbbf24',
+                              border: '1px solid rgba(245, 158, 11, 0.3)',
+                              fontWeight: 600,
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.25rem'
+                            }}
+                          >
+                            <span>{snk.emoji || '🍿'}</span>
+                            <span>{snk.name} ×{snk.count}</span>
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -174,7 +202,21 @@ const MyBookingsPage = () => {
                 </div>
 
                 {/* Actions */}
-                <div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <button
+                    onClick={() => setViewingTicket(booking)}
+                    className="btn-primary"
+                    style={{
+                      padding: '0.45rem 0.9rem',
+                      fontSize: '0.82rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Ticket size={14} /> View Ticket
+                  </button>
                   {!isCancelled && (
                     <button
                       onClick={() => {
@@ -185,11 +227,15 @@ const MyBookingsPage = () => {
                       style={{
                         borderColor: 'rgba(239, 68, 68, 0.4)',
                         color: '#f87171',
-                        padding: '0.55rem 1rem',
-                        fontSize: '0.85rem'
+                        padding: '0.45rem 0.9rem',
+                        fontSize: '0.8rem',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        justifyContent: 'center'
                       }}
                     >
-                      <XCircle size={15} /> Cancel Booking
+                      <XCircle size={14} /> Cancel Booking
                     </button>
                   )}
                 </div>
@@ -274,6 +320,60 @@ const MyBookingsPage = () => {
                 {cancellingId ? 'Processing Refund...' : 'Confirm Cancellation'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* View Digital Ticket Modal */}
+      {viewingTicket && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.85)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '1rem',
+            overflowY: 'auto'
+          }}
+          onClick={() => setViewingTicket(null)}
+        >
+          <div
+            style={{
+              position: 'relative',
+              maxWidth: '540px',
+              width: '100%',
+              margin: 'auto'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setViewingTicket(null)}
+              style={{
+                position: 'absolute',
+                top: '-12px',
+                right: '-12px',
+                background: '#e50914',
+                color: 'white',
+                border: 'none',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 10,
+                boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+              }}
+              title="Close Ticket"
+            >
+              <X size={18} />
+            </button>
+            <DigitalTicket booking={viewingTicket} />
           </div>
         </div>
       )}

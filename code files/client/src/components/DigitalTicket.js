@@ -96,6 +96,59 @@ const DigitalTicket = ({ booking }) => {
             </div>
           </div>
 
+          {booking.snacks && booking.snacks.length > 0 && (
+            <div
+              style={{
+                marginTop: '1rem',
+                background: '#121826',
+                border: '1px dashed rgba(251, 191, 36, 0.4)',
+                borderRadius: '10px',
+                padding: '0.85rem 1rem'
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '0.5rem',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                  paddingBottom: '0.35rem'
+                }}
+              >
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  🍿 Concession Voucher
+                </div>
+                <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>
+                  ₹{booking.snacksTotal || booking.snacks.reduce((acc, s) => acc + (s.price * s.count), 0)}
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                {booking.snacks.map((snack, idx) => (
+                  <span
+                    key={idx}
+                    style={{
+                      fontSize: '0.78rem',
+                      background: 'rgba(251, 191, 36, 0.1)',
+                      color: '#f8fafc',
+                      border: '1px solid rgba(251, 191, 36, 0.25)',
+                      padding: '0.2rem 0.55rem',
+                      borderRadius: '6px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      fontWeight: 600
+                    }}
+                  >
+                    <span>{snack.emoji || '🍿'}</span>
+                    <span>{snack.name}</span>
+                    <strong style={{ color: '#fbbf24' }}>×{snack.count}</strong>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="ticket-divider" />
 
           {/* Barcode & Total Paid */}

@@ -189,7 +189,8 @@ const SeatBookingPage = () => {
         showId,
         seatNumbers: selectedSeats,
         paymentMethod: paymentData.paymentMethod,
-        cardDetails: paymentData.cardDetails
+        cardDetails: paymentData.cardDetails,
+        snacks: paymentData.snacks || []
       });
 
       if (res.data.success) {
