@@ -128,6 +128,70 @@ exports.getMe = async (req, res, next) => {
   }
 };
 
+// @desc    Google Sign In / Register
+// @route   POST /api/auth/google
+// @access  Public
+exports.googleLogin = async (req, res, next) => {
+  try {
+    const { email, name, avatar, googleId } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid Google email'
+      });
+    }
+
+    const cleanEmail = email.toLowerCase().trim();
+    let user = await User.findOne({ email: cleanEmail });
+
+    if (!user) {
+      // Create new user authenticated via Google
+      const randomPassword = 'G_' + Math.random().toString(36).slice(-8) + '!' + Date.now().toString().slice(-4);
+      user = await User.create({
+        name: name || cleanEmail.split('@')[0],
+        email: cleanEmail,
+        password: randomPassword,
+        avatar: avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name || cleanEmail)}`,
+        googleId: googleId || '',
+        role: 'user'
+      });
+    } else {
+      // Update avatar or googleId if user exists
+      let needsSave = false;
+      if (googleId && !user.googleId) {
+        user.googleId = googleId;
+        needsSave = true;
+      }
+      if (avatar && (!user.avatar || user.avatar.includes('unsplash'))) {
+        user.avatar = avatar;
+        needsSave = true;
+      }
+      if (needsSave) {
+        await user.save();
+      }
+    }
+
+    const token = generateToken(user._id);
+
+    res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        phone: user.phone,
+        avatar: user.avatar
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 // @desc    Update user profile
 // @route   PUT /api/auth/profile
 // @access  Private
@@ -151,3 +215,4 @@ exports.updateProfile = async (req, res, next) => {
     next(error);
   }
 };
+

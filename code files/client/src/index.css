@@ -184,6 +184,19 @@ textarea:focus-visible {
   color: var(--text-main);
 }
 
+.desktop-city-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  position: relative;
+}
+.mobile-city-picker {
+  display: none;
+}
+.mobile-actions {
+  display: none;
+}
+
 .city-pill {
   display: flex;
   align-items: center;
@@ -200,6 +213,17 @@ textarea:focus-visible {
 .city-pill:hover {
   border-color: rgba(255, 255, 255, 0.2);
   color: var(--text-main);
+}
+
+/* Google Sign In Button */
+.google-signin-btn:hover {
+  background: #f9fafb !important;
+  border-color: #d1d5db !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18) !important;
+  transform: translateY(-1px);
+}
+.google-signin-btn:active {
+  transform: translateY(0);
 }
 
 /* Primary Button */
@@ -727,10 +751,27 @@ textarea:focus-visible {
     right: 6px !important;
   }
   .nav-links {
-    display: none;
+    display: none !important;
   }
   .desktop-city-picker {
-    display: none;
+    display: none !important;
+  }
+  .mobile-city-picker {
+    display: flex !important;
+    align-items: center;
+  }
+  .mobile-actions {
+    display: flex !important;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .brand-logo {
+    font-size: 1.25rem !important;
+    gap: 0.35rem !important;
+  }
+  .compact-pill {
+    padding: 0.35rem 0.65rem !important;
+    font-size: 0.78rem !important;
   }
   .mobile-menu-btn {
     display: flex !important;

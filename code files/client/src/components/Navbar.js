@@ -3,7 +3,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { safeStorage } from '../utils/safeStorage';
-import { Film, Bell, User, LogOut, ShieldCheck, Ticket, MapPin, Menu, X, LocateFixed, Loader2 } from 'lucide-react';
+import { Film, Bell, User, LogOut, ShieldCheck, Ticket, MapPin, Menu, X, LocateFixed, Loader2, LogIn } from 'lucide-react';
+import GoogleSignInButton from './GoogleSignInButton';
 
 const CITY_COORDINATES = {
   'Mumbai': { lat: 19.0760, lon: 72.8777 },
@@ -190,7 +191,7 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
         </Link>
 
         {/* City Filter (Desktop) with Auto Location Detection */}
-        <div className="desktop-city-picker" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', position: 'relative' }}>
+        <div className="desktop-city-picker">
           <div className="city-pill">
             <MapPin size={16} color="#e50914" />
             <select
@@ -278,6 +279,39 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
               {locationStatus}
             </div>
           )}
+        </div>
+
+        {/* Mobile City Picker (Compact) */}
+        <div className="mobile-city-picker">
+          <div className="city-pill compact-pill">
+            <MapPin size={13} color="#e50914" />
+            <select
+              value={selectedCity}
+              onChange={(e) => {
+                setSelectedCity(e.target.value);
+                if (e.target.value !== 'All') {
+                  safeStorage.setItem('imovies_user_city', e.target.value);
+                }
+              }}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'inherit',
+                outline: 'none',
+                cursor: 'pointer',
+                fontWeight: 600,
+                fontSize: '0.78rem',
+                maxWidth: '92px'
+              }}
+            >
+              <option value="All" style={{ background: '#121826' }}>All</option>
+              {cities.map((city) => (
+                <option key={city} value={city} style={{ background: '#121826' }}>
+                  {city}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Desktop Navigation links */}
@@ -478,21 +512,69 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
           )}
         </div>
 
-        {/* Mobile Hamburger Toggle Button */}
-        <button
-          className="mobile-menu-btn"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          style={{
-            background: 'transparent',
-            color: 'white',
-            display: 'none',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '0.4rem'
-          }}
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        {/* Mobile Action Buttons (Direct Sign In / Profile + Hamburger Menu) */}
+        <div className="mobile-actions">
+          {isAuthenticated ? (
+            <Link
+              to="/my-bookings"
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                background: 'rgba(255, 255, 255, 0.08)',
+                padding: '0.3rem 0.55rem',
+                borderRadius: '9999px',
+                border: '1px solid var(--border-subtle)',
+                color: 'white',
+                textDecoration: 'none'
+              }}
+              title="My Account"
+            >
+              <img
+                src={user.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'}
+                alt={user.name}
+                style={{ width: '22px', height: '22px', borderRadius: '50%', objectFit: 'cover' }}
+              />
+              <span style={{ fontSize: '0.78rem', fontWeight: 600 }}>{user.name.split(' ')[0]}</span>
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              state={{ from: location.pathname + location.search }}
+              className="btn-primary"
+              style={{
+                padding: '0.38rem 0.75rem',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                whiteSpace: 'nowrap',
+                borderRadius: '6px'
+              }}
+            >
+              Sign In
+            </Link>
+          )}
+
+          {/* Mobile Hamburger Toggle Button */}
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+            style={{
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '8px',
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '0.45rem',
+              cursor: 'pointer'
+            }}
+          >
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer Menu */}
@@ -627,15 +709,22 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
               </button>
             </>
           ) : (
-            <Link
-              to="/login"
-              state={{ from: location.pathname + location.search }}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="btn-primary"
-              style={{ width: '100%', textAlign: 'center', marginTop: '0.5rem' }}
-            >
-              Sign In / Register
-            </Link>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.5rem' }}>
+              <Link
+                to="/login"
+                state={{ from: location.pathname + location.search }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="btn-primary"
+                style={{ width: '100%', textAlign: 'center', padding: '0.65rem', fontSize: '0.88rem' }}
+              >
+                Sign In / Register
+              </Link>
+              <GoogleSignInButton
+                buttonText="Sign in with Google"
+                onSuccess={() => setIsMobileMenuOpen(false)}
+                style={{ padding: '0.65rem' }}
+              />
+            </div>
           )}
         </div>
       )}

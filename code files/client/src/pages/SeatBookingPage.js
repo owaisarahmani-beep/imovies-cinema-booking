@@ -6,6 +6,7 @@ import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import SeatMap from '../components/SeatMap';
 import BookingModal from '../components/BookingModal';
+import GoogleSignInButton from '../components/GoogleSignInButton';
 import { ArrowLeft, Clock, ShieldAlert, CheckCircle2, X, Lock, Mail, User, Sparkles, LogIn } from 'lucide-react';
 
 const SeatBookingPage = () => {
@@ -598,6 +599,17 @@ const SeatBookingPage = () => {
                 {authLoading ? 'Signing In...' : (authModalMode === 'login' ? 'Sign In & Lock Seats' : 'Register & Lock Seats')}
               </button>
             </form>
+
+            {/* Google Sign In Option */}
+            <div style={{ marginTop: '0.85rem' }}>
+              <GoogleSignInButton
+                buttonText="Continue with Google"
+                onSuccess={() => {
+                  setIsAuthModalOpen(false);
+                  proceedWithLock(selectedSeats);
+                }}
+              />
+            </div>
 
             {/* Mode switch & Full Login link */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', fontSize: '0.78rem' }}>

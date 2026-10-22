@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import { Film, Lock, Mail, User, ShieldCheck, Ticket } from 'lucide-react';
+import GoogleSignInButton from '../components/GoogleSignInButton';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -193,6 +194,18 @@ const LoginPage = () => {
           >
             {loading ? 'Authenticating...' : 'Sign In'}
           </button>
+
+          {/* Google Sign In Divider */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '1.25rem 0' }}>
+            <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
+            <span style={{ fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>or continue with</span>
+            <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
+          </div>
+
+          <GoogleSignInButton
+            buttonText="Sign in with Google"
+            onSuccess={(data) => redirectAfterLogin(data.user.role)}
+          />
         </form>
 
         <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.85rem', color: '#94a3b8' }}>
