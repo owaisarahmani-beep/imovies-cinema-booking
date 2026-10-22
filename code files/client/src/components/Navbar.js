@@ -223,6 +223,7 @@ const Navbar = ({ selectedCity, setSelectedCity }) => {
           {/* Detect Location Button */}
           <button
             type="button"
+            className="desktop-only-btn"
             onClick={handleDetectLocation}
             disabled={isDetectingLocation}
             title="Detect my current location"
